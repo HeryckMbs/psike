@@ -91,7 +91,51 @@ document.addEventListener('DOMContentLoaded', function() {
         tentButton.style.opacity = '0.5';
         tentButton.style.cursor = 'not-allowed';
     }
+    
+    // Configurar máscaras para campos do carrinho
+    setupCartFormMasks();
 });
+
+// ============================================
+// Máscaras para Campos do Carrinho
+// ============================================
+
+function setupCartFormMasks() {
+    // Máscara para CEP
+    const cepInput = document.getElementById('client-cep');
+    if (cepInput) {
+        cepInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 8) {
+                value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+                e.target.value = value;
+            }
+        });
+    }
+    
+    // Máscara para CPF ou CNPJ
+    const documentInput = document.getElementById('client-document');
+    if (documentInput) {
+        documentInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            // Se tiver 11 dígitos ou menos, formatar como CPF
+            if (value.length <= 11) {
+                value = value.replace(/^(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+                value = value.replace(/\.(\d{3})(\d)/, '.$1-$2');
+            } else {
+                // Se tiver mais de 11 dígitos, formatar como CNPJ
+                value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+                value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+                value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+                value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            }
+            
+            e.target.value = value;
+        });
+    }
+}
 
 // ============================================
 // Atualizar Link do WhatsApp
@@ -799,7 +843,7 @@ function formatNumber(value) {
 }
 
 // Gerar mensagem formatada para WhatsApp
-function generateWhatsAppMessage() {
+function generateWhatsAppMessage(clientData) {
     let message = '*PEDIDO - PSIKÉ DELOUN ARTS*\n\n';
     
     // Calcular total do pedido
@@ -833,11 +877,14 @@ function generateWhatsAppMessage() {
     message += `Total de itens: ${getCartTotal()}\n\n`;
     message += '━━━━━━━━━━━━━━━━━━━━\n\n';
     message += '*DADOS PARA FRETE:*\n\n';
-    message += 'Por favor, envie:\n';
-    message += '• Nome completo\n';
-    message += '• CEP\n';
-    message += '• Endereço completo\n';
-    message += '• CPF ou CNPJ\n\n';
+    
+    if (clientData) {
+        message += `*Nome Completo:*\n${clientData.name}\n\n`;
+        message += `*CEP:*\n${clientData.cep}\n\n`;
+        message += `*Endereço Completo:*\n${clientData.address}\n\n`;
+        message += `*CPF ou CNPJ:*\n${clientData.document}\n\n`;
+    }
+    
     message += 'Aguardo retorno.';
     
     return message;
@@ -850,7 +897,58 @@ function sendCartToWhatsApp() {
         return;
     }
     
-    const message = generateWhatsAppMessage();
+    // Validar campos obrigatórios
+    const clientName = document.getElementById('client-name');
+    const clientCep = document.getElementById('client-cep');
+    const clientAddress = document.getElementById('client-address');
+    const clientDocument = document.getElementById('client-document');
+    
+    if (!clientName || !clientCep || !clientAddress || !clientDocument) {
+        alert('Erro: Campos de dados do cliente não encontrados.');
+        return;
+    }
+    
+    // Remover espaços em branco
+    const name = clientName.value.trim();
+    const cep = clientCep.value.trim();
+    const address = clientAddress.value.trim();
+    const documentValue = clientDocument.value.trim();
+    
+    // Validar campos preenchidos
+    if (!name) {
+        alert('Por favor, preencha o nome completo.');
+        clientName.focus();
+        return;
+    }
+    
+    if (!cep) {
+        alert('Por favor, preencha o CEP.');
+        clientCep.focus();
+        return;
+    }
+    
+    if (!address) {
+        alert('Por favor, preencha o endereço completo.');
+        clientAddress.focus();
+        return;
+    }
+    
+    if (!documentValue) {
+        alert('Por favor, preencha o CPF ou CNPJ.');
+        clientDocument.focus();
+        return;
+    }
+    
+    // Preparar dados do cliente
+    const clientData = {
+        name: name,
+        cep: cep,
+        address: address,
+        document: documentValue
+    };
+    
+    // Gerar mensagem com dados do cliente
+    const message = generateWhatsAppMessage(clientData);
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
     
@@ -861,6 +959,12 @@ function sendCartToWhatsApp() {
     cart = [];
     saveCart();
     updateCartUI();
+    
+    // Limpar campos do formulário
+    clientName.value = '';
+    clientCep.value = '';
+    clientAddress.value = '';
+    clientDocument.value = '';
 }
 
 // ============================================
