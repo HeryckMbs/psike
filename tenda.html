@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tendas Tensionadas Personalizadas - Malhas tensionadas de alta performance projetadas sob medida">
+    <meta name="keywords" content="tendas tensionadas, estruturas personalizadas, malhas tensionadas">
+    <title>Tendas Tensionadas Personalizadas - Psiké Deloun Arts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <!-- Botão de Carrinho Fixo -->
+    <a href="carrinho.html" class="cart-button" id="cartButton" aria-label="Ver carrinho">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+    </a>
+
+    <!-- Header -->
+    <header class="page-header">
+        <div class="container">
+            <a href="index.html" class="header-logo">
+                <img src="assets/images/logo.png" alt="Psiké Deloun Arts Logo">
+            </a>
+            <nav class="header-nav">
+                <a href="index.html">Início</a>
+                <a href="produtos.html" class="active">Produtos</a>
+                <a href="carrinho.html">Carrinho</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Página do Produto -->
+    <section class="product-page">
+        <div class="container">
+            <div class="product-page-content">
+                <!-- Cabeçalho do Produto (acima de tudo) -->
+                <div class="product-header-top">
+                    <div class="product-breadcrumb">
+                        <a href="index.html">Início</a> / <a href="produtos.html">Produtos</a> / <span>Tendas Tensionadas</span>
+                    </div>
+                    
+                    <h1 class="product-page-title">Tendas Tensionadas Personalizadas</h1>
+                </div>
+
+                <!-- Linha 1: Imagem | Ações -->
+                <div class="product-row-1">
+                    <!-- Foto -->
+                    <div class="product-gallery">
+                        <div class="product-main-image">
+                            <img src="assets/images/catalogo/14x14.png" alt="Tenda tensionada personalizada" id="mainProductImage">
+                        </div>
+                      
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="product-dimensions-large" data-product-type="tent">
+                        <div class="dimensions-header">
+                            <h3 class="dimensions-title-large">Informe as Dimensões</h3>
+                            <p class="dimensions-subtitle-large">R$ 22,00 por m²</p>
+                        </div>
+                        
+                        <p class="product-page-description">
+                            Malhas tensionadas de alta performance, projetadas sob medida para criar espaços únicos e impactantes. 
+                            Durabilidade excepcional e acabamento profissional. Ideal para eventos, festivais, casamentos e ativações corporativas.
+                        </p>
+                        <div class="dimensions-inputs-large">
+                            <div class="dimension-input-group-large">
+                                <label for="tent-height-large" class="dimension-label-large">Altura (m)</label>
+                                <div class="dimension-input-wrapper">
+                                    <input type="number" id="tent-height-large" class="dimension-input-large" min="0" step="0.1" placeholder="Ex: 5.0" oninput="calculateTentPriceLarge('tendas'); updateProductTitle();">
+                                    <button type="button" class="dimension-input-btn dimension-input-btn-up" onclick="incrementDimension('tent-height-large')">↑</button>
+                                    <button type="button" class="dimension-input-btn dimension-input-btn-down" onclick="decrementDimension('tent-height-large')">↓</button>
+                                </div>
+                            </div>
+                            <div class="dimension-input-group-large">
+                                <label for="tent-width-large" class="dimension-label-large">Largura (m)</label>
+                                <div class="dimension-input-wrapper">
+                                    <input type="number" id="tent-width-large" class="dimension-input-large" min="0" step="0.1" placeholder="Ex: 3.0" oninput="calculateTentPriceLarge('tendas'); updateProductTitle();">
+                                    <button type="button" class="dimension-input-btn dimension-input-btn-up" onclick="incrementDimension('tent-width-large')">↑</button>
+                                    <button type="button" class="dimension-input-btn dimension-input-btn-down" onclick="decrementDimension('tent-width-large')">↓</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="price-display-large" id="tent-price-display-large">
+                            <span class="price-label-large">Preço Total:</span>
+                            <span class="price-value-large" id="tent-price-value-large">R$ 0,00</span>
+                        </div>
+                        
+                        <!-- Ações dentro do mesmo card -->
+                        <div class="product-actions-large">
+                            <button class="btn-primary-large" id="btn-add-tent-large" data-product-id="tendas" data-product-name="Tendas Tensionadas Personalizadas" data-product-image="assets/images/catalogo/14x14.png" data-product-specs="Envio nacional, Modelagem 3D inclusa">
+                                Adicionar ao Carrinho
+                            </button>
+                            <a href="produtos.html" class="product-link-secondary">Ver Outros Produtos</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Linha 2: Informações (card único) -->
+                <div class="product-info-full">
+                    <div class="product-specs-large">
+                        <h3 class="specs-title">Especificações</h3>
+                        <ul class="specs-list">
+                            <li>Envio para todo o Brasil</li>
+                            <li>Dimensões personalizadas</li>
+                            <li>Materiais de alta durabilidade</li>
+                            <li>Acabamento profissional</li>
+                        </ul>
+                        
+                        <h3 class="shipping-title">FRETES E CONDIÇÕES</h3>
+                        <ul class="shipping-list">
+                            <li>Frete não incluso</li>
+                            <li>Valor do frete varia com o peso</li>
+                            <li>Consulte valores e condições</li>
+                            <li>Valores das tendas sujeitos a alteração</li>
+                        </ul>
+                        <div class="shipping-not-included">
+                            <h4 class="shipping-not-included-title">NÃO INCLUSO</h4>
+                            <p class="shipping-not-included-text">Cordas, estruturas de sustentação, frete e mão de obra presencial (quando não contratada).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produtos Relacionados / Sugestões -->
+            <div class="related-products-section">
+                <h2 class="related-products-title">Você também pode gostar</h2>
+                <div class="related-products-grid" id="relatedProductsGrid">
+                    <!-- Produtos relacionados serão inseridos aqui via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-capture" id="contato">
+        <div class="container">
+            <div class="footer-content">
+                <h2 class="footer-title">Se existe um limite, nós tensionamos até romper.</h2>
+                <p class="footer-subtitle">Vamos construir a identidade do seu próximo evento.</p>
+                <a href="index.html" class="btn-primary">Voltar ao Início</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/main.js"></script>
+    <script>
+        // Função removida - apenas foto principal da tenda será exibida
+
+        // Calcular preço na página de detalhes
+        window.calculateTentPriceLarge = function(productId) {
+            const heightInput = document.getElementById('tent-height-large');
+            const widthInput = document.getElementById('tent-width-large');
+            const priceDisplay = document.getElementById('tent-price-value-large');
+            const addButton = document.getElementById('btn-add-tent-large');
+            
+            if (!heightInput || !widthInput || !priceDisplay) {
+                return 0;
+            }
+            
+            const height = parseFloat(heightInput.value) || 0;
+            const width = parseFloat(widthInput.value) || 0;
+            
+            const area = height * width;
+            const price = area * 22.00;
+            
+            priceDisplay.textContent = new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(price);
+            
+            if (addButton) {
+                if (height > 0 && width > 0) {
+                    addButton.disabled = false;
+                    addButton.style.opacity = '1';
+                    addButton.style.cursor = 'pointer';
+                } else {
+                    addButton.disabled = true;
+                    addButton.style.opacity = '0.5';
+                    addButton.style.cursor = 'not-allowed';
+                }
+            }
+            
+            return price;
+        };
+
+        // Produtos relacionados - outras tendas do catálogo
+        function getRelatedTents(currentId) {
+            if (typeof TENT_CATALOG === 'undefined') return [];
+            
+            // Filtrar tendas diferentes da atual
+            const otherTents = TENT_CATALOG.filter(tent => tent.id !== currentId);
+            
+            // Embaralhar e pegar 4 aleatórias
+            const shuffled = shuffleArray(otherTents);
+            return shuffled.slice(0, 4);
+        }
+
+        // Embaralhar e mostrar produtos relacionados
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function renderRelatedProducts() {
+            const grid = document.getElementById('relatedProductsGrid');
+            if (!grid) return;
+
+            const params = getURLParams();
+            const currentId = params.id || 'tenda-14x14';
+            const relatedTents = getRelatedTents(currentId);
+
+            if (relatedTents.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: var(--color-text-secondary);">Nenhuma tenda relacionada disponível.</p>';
+                return;
+            }
+
+            grid.innerHTML = relatedTents.map(tent => `
+                <article class="related-product-card">
+                    <a href="tenda.html?w=${tent.width}&h=${tent.height}&id=${tent.id}">
+                        <div class="related-product-image">
+                            <img src="${tent.image}" alt="Tenda ${tent.width}m x ${tent.height}m" loading="lazy">
+                        </div>
+                        <div class="related-product-content">
+                            <h3 class="related-product-title">Tenda ${tent.width}m × ${tent.height}m</h3>
+                        </div>
+                    </a>
+                </article>
+            `).join('');
+        }
+
+        // Obter parâmetros da URL
+        function getURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                width: params.get('w') || params.get('width'),
+                height: params.get('h') || params.get('height'),
+                id: params.get('id')
+            };
+        }
+
+        // Atualizar título dinamicamente
+        window.updateProductTitle = function() {
+            const widthInput = document.getElementById('tent-width-large');
+            const heightInput = document.getElementById('tent-height-large');
+            const pageTitle = document.querySelector('.product-page-title');
+            
+            if (widthInput && heightInput && pageTitle) {
+                const width = parseFloat(widthInput.value) || 0;
+                const height = parseFloat(heightInput.value) || 0;
+                
+                if (width > 0 && height > 0) {
+                    pageTitle.textContent = `Tenda ${width}m × ${height}m`;
+                } else {
+                    pageTitle.textContent = 'Tendas Tensionadas Personalizadas';
+                }
+            }
+        };
+
+        // Funções para incrementar/decrementar dimensões
+        window.incrementDimension = function(inputId) {
+            const input = document.getElementById(inputId);
+            if (input) {
+                let value = parseFloat(input.value) || 0;
+                value = Math.max(0, value + 0.1);
+                input.value = value.toFixed(1);
+                input.dispatchEvent(new Event('input'));
+            }
+        };
+
+        window.decrementDimension = function(inputId) {
+            const input = document.getElementById(inputId);
+            if (input) {
+                let value = parseFloat(input.value) || 0;
+                value = Math.max(0, value - 0.1);
+                input.value = value.toFixed(1);
+                input.dispatchEvent(new Event('input'));
+            }
+        };
+
+        // Formatar CEP
+        window.formatCEP = function(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 5) {
+                value = value.substring(0, 5) + '-' + value.substring(5, 8);
+            }
+            input.value = value;
+        };
+
+        // Calcular frete (placeholder - implementar integração com API de frete)
+        window.calculateShipping = function() {
+            const cepInput = document.getElementById('shipping-cep');
+            const resultDiv = document.getElementById('shippingResult');
+            const resultText = document.getElementById('shippingResultText');
+            
+            if (!cepInput || !resultDiv || !resultText) return;
+            
+            const cep = cepInput.value.replace(/\D/g, '');
+            
+            if (cep.length !== 8) {
+                alert('Por favor, digite um CEP válido (8 dígitos)');
+                return;
+            }
+            
+            // Placeholder - aqui seria feita a integração com API de frete
+            resultText.textContent = `Frete para ${cep.substring(0, 5)}-${cep.substring(5)}: R$ XX,XX (Prazo: X dias úteis)`;
+            resultDiv.style.display = 'block';
+        };
+
+        // Preencher campos com valores da URL
+        function fillDimensionsFromURL() {
+            const params = getURLParams();
+            
+            // Buscar tenda do catálogo se tiver ID (prioridade)
+            if (params.id && typeof TENT_CATALOG !== 'undefined') {
+                const tent = TENT_CATALOG.find(t => t.id === params.id);
+                if (tent) {
+                    // Atualizar imagem principal
+                    const mainImage = document.getElementById('mainProductImage');
+                    if (mainImage) {
+                        mainImage.src = tent.image;
+                        mainImage.alt = `Tenda ${tent.width}m x ${tent.height}m`;
+                        // Re-detectar orientação quando a imagem carregar
+                        if (mainImage.complete) {
+                            detectImageOrientation();
+                        } else {
+                            mainImage.addEventListener('load', detectImageOrientation, { once: true });
+                        }
+                    }
+                    
+                    // Preencher dimensões da tenda encontrada
+                    const widthInput = document.getElementById('tent-width-large');
+                    const heightInput = document.getElementById('tent-height-large');
+                    
+                    // Usar dimensões da URL se fornecidas, senão usar da tenda
+                    if (params.width && params.height) {
+                        if (widthInput) widthInput.value = params.width;
+                        if (heightInput) heightInput.value = params.height;
+                    } else {
+                        if (widthInput) widthInput.value = tent.width;
+                        if (heightInput) heightInput.value = tent.height;
+                    }
+                    
+                    // Calcular preço automaticamente
+                    calculateTentPriceLarge('tendas');
+                    updateProductTitle();
+                    
+                    // Atualizar título da página
+                    const pageTitle = document.querySelector('.product-page-title');
+                    if (pageTitle) {
+                        if (widthInput && heightInput && widthInput.value && heightInput.value) {
+                            pageTitle.textContent = `Tenda ${widthInput.value}m × ${heightInput.value}m`;
+                        } else {
+                            pageTitle.textContent = `Tenda ${tent.width}m × ${tent.height}m`;
+                        }
+                    }
+                    
+                    // Atualizar imagem do botão de adicionar ao carrinho
+                    const addButton = document.getElementById('btn-add-tent-large');
+                    if (addButton) {
+                        addButton.setAttribute('data-product-image', tent.image);
+                    }
+                    
+                    // Gerar thumbnails
+                    generateThumbnails();
+                    return;
+                }
+            }
+            
+            // Se não encontrou pelo ID, usar dimensões da URL se fornecidas
+            if (params.width && params.height) {
+                const widthInput = document.getElementById('tent-width-large');
+                const heightInput = document.getElementById('tent-height-large');
+                
+                if (widthInput) widthInput.value = params.width;
+                if (heightInput) heightInput.value = params.height;
+                
+                // Calcular preço automaticamente
+                calculateTentPriceLarge('tendas');
+                updateProductTitle();
+            }
+            
+            // Gerar thumbnails
+            generateThumbnails();
+        }
+
+        // Gerar thumbnails da galeria
+        function generateThumbnails() {
+            const thumbnailsContainer = document.getElementById('productThumbnails');
+            const mainImage = document.getElementById('mainProductImage');
+            
+            if (!thumbnailsContainer || !mainImage) return;
+            
+            // Por enquanto, usar a mesma imagem (pode ser expandido depois)
+            const currentImageSrc = mainImage.src;
+            
+            // Criar 3 thumbnails (mesma imagem por enquanto)
+            thumbnailsContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                const thumbnail = document.createElement('div');
+                thumbnail.className = 'thumbnail' + (i === 0 ? ' active' : '');
+                thumbnail.innerHTML = `<img src="${currentImageSrc}" alt="Tenda - Vista ${i + 1}" loading="lazy">`;
+                thumbnail.onclick = function() {
+                    // Remover active de todos
+                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                    // Adicionar active ao clicado
+                    this.classList.add('active');
+                    // Atualizar imagem principal
+                    mainImage.src = this.querySelector('img').src;
+                    detectImageOrientation();
+                };
+                thumbnailsContainer.appendChild(thumbnail);
+            }
+        }
+
+        // Detectar orientação da imagem e ajustar layout
+        function detectImageOrientation() {
+            const mainImage = document.getElementById('mainProductImage');
+            const imageContainer = document.querySelector('.product-main-image');
+            
+            if (!mainImage || !imageContainer) return;
+            
+            function checkAndApply() {
+                const width = mainImage.naturalWidth;
+                const height = mainImage.naturalHeight;
+                
+                if (width > 0 && height > 0) {
+                    applyOrientation(mainImage, imageContainer);
+                }
+            }
+            
+            // Se a imagem já está carregada
+            if (mainImage.complete && mainImage.naturalWidth > 0) {
+                checkAndApply();
+            } else {
+                // Esperar a imagem carregar
+                mainImage.addEventListener('load', function() {
+                    checkAndApply();
+                }, { once: true });
+                
+                // Fallback: tentar novamente após um tempo
+                setTimeout(function() {
+                    if (mainImage.naturalWidth > 0) {
+                        checkAndApply();
+                    }
+                }, 500);
+            }
+        }
+        
+        function applyOrientation(img, container) {
+            const width = img.naturalWidth;
+            const height = img.naturalHeight;
+            
+            console.log('Dimensões da imagem:', width, 'x', height); // Debug
+            
+            // Remover classes anteriores
+            container.classList.remove('image-landscape', 'image-portrait');
+            
+            // Determinar orientação (com margem de tolerância)
+            const ratio = width / height;
+            
+            if (ratio > 1.1) {
+                // Paisagem (largura significativamente maior)
+                container.classList.add('image-landscape');
+                console.log('Aplicando classe: image-landscape');
+            } else if (ratio < 0.9) {
+                // Retrato (altura significativamente maior)
+                container.classList.add('image-portrait');
+                console.log('Aplicando classe: image-portrait');
+            } else {
+                // Quase quadrado - usar paisagem como padrão
+                container.classList.add('image-landscape');
+                console.log('Aplicando classe: image-landscape (quase quadrado)');
+            }
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            fillDimensionsFromURL();
+            renderRelatedProducts();
+            
+            // Gerar thumbnails
+            generateThumbnails();
+            
+            // Detectar orientação após um pequeno delay para garantir que a imagem foi carregada
+            setTimeout(detectImageOrientation, 300);
+            
+            // Tentar novamente após mais tempo caso a imagem demore para carregar
+            setTimeout(detectImageOrientation, 1000);
+            
+            const tentButton = document.getElementById('btn-add-tent-large');
+            if (tentButton) {
+                // Se já tiver valores preenchidos, habilitar botão
+                const widthInput = document.getElementById('tent-width-large');
+                const heightInput = document.getElementById('tent-height-large');
+                
+                if (widthInput && heightInput && widthInput.value && heightInput.value) {
+                    tentButton.disabled = false;
+                    tentButton.style.opacity = '1';
+                    tentButton.style.cursor = 'pointer';
+                } else {
+                    tentButton.disabled = true;
+                    tentButton.style.opacity = '0.5';
+                    tentButton.style.cursor = 'not-allowed';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Design & Cenografia. Estruturas tensionadas e domos geodésicos projetados sob medida. Da arte visionária à precisão da engenharia.">
+    <meta name="keywords" content="tendas tensionadas, domos geodésicos, cenografia, arquitetura efêmera, estruturas personalizadas">
+    <title>Psiké Deloun Arts - Arquitetura Efêmera e Cenografia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <!-- Botão de Carrinho Fixo -->
+    <a href="carrinho.html" class="cart-button" id="cartButton" aria-label="Ver carrinho">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+    </a>
+
+    <!-- Header -->
+    <header class="page-header">
+        <div class="container">
+            <a href="index.html" class="header-logo">
+                <img src="assets/images/logo.png" alt="Psiké Deloun Arts Logo">
+            </a>
+            <nav class="header-nav">
+                <a href="index.html" class="active">Início</a>
+                <a href="produtos.html">Produtos</a>
+                <a href="carrinho.html">Carrinho</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-background">
+            <div class="hero-background-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-logo">
+                <img src="assets/images/logo.png" alt="Psiké Deloun Arts Logo">
+            </div>
+            <h1 class="hero-title">Design & Cenografia</h1>
+            <p class="hero-subtitle">Criar estruturas únicas para transformar ambientes e elevar experiências.
+                Se existe um limite, nós tensionamos até romper.</p>
+            <a href="#catalogo" class="btn-primary">Ver Catálogo de Estruturas</a>
+        </div>
+    </section>
+
+    <!-- Catálogo de Produtos -->
+    <section class="catalogo" id="catalogo">
+        <div class="container">
+            <h2 class="section-title">Nossas Estruturas</h2>
+            <p class="section-subtitle">Soluções personalizadas para transformar qualquer espaço em uma experiência memorável</p>
+            
+            <div class="catalogo-grid">
+                <!-- Card 1: Tendas Tensionadas -->
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="assets/images/sobre_nos/foto_tenda_psicodelcia_2.jpg" alt="Tenda tensionada personalizada">
+                        <div class="product-badge">Comprar / Uso Ilimitado</div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Tendas Tensionadas Personalizadas</h3>
+                        <p class="product-description">Malhas tensionadas de alta performance, projetadas sob medida para criar espaços únicos e impactantes. Durabilidade excepcional e acabamento profissional.</p>
+                        <ul class="product-specs">
+                            <li> Envio para todo o Brasil</li>
+                            <li> Modelagem 3D inclusa</li>
+                            <li> Dimensões personalizadas</li>
+                            <li> Garantia de qualidade</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Card 2: Locação e Montagem -->
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="assets/images/sobre_nos/foto_construcao_tenda.jpg" alt="Estrutura em evento corporativo">
+                        <div class="product-badge">Para Eventos Sociais e Corporativos</div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Locação e Montagem</h3>
+                        <p class="product-description">Serviço completo de locação com equipe especializada. Ideal para eventos corporativos, casamentos e festivais. Montagem profissional e desmontagem incluídas.</p>
+                        <ul class="product-specs">
+                            <li> Equipe técnica especializada</li>
+                            <li> Montagem e desmontagem</li>
+                            <li> Aprovação de bombeiros</li>
+                            <li> Atendimento nacional</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Card 3: Domos Geodésicos -->
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="assets/images/sobre_nos/domo.jpg" alt="Domo geodésico imersivo">
+                        <div class="product-badge">Ativações Imersivas</div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Domos Geodésicos</h3>
+                        <p class="product-description">Estruturas geodésicas que criam ambientes imersivos e tecnológicos. Perfeitas para experiências sensoriais, projeções mapeadas e ativações de marca.</p>
+                        <ul class="product-specs">
+                            <li> Estrutura modular e versátil</li>
+                            <li> Suporte para projeções</li>
+                            <li> Bioconstrução sustentável</li>
+                            <li> Múltiplos tamanhos disponíveis</li>
+                        </ul>
+                    </div>
+                </article>
+
+            </div>
+            
+            <div class="catalogo-actions">
+                <a href="produtos.html" class="btn-primary">Ver Catálogo Completo e Montar Seu Pedido</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Sobre a Psiké Deloun Arts -->
+    <section class="sobre-section" id="sobre">
+        <div class="container">
+            <h2 class="section-title">SOBRE A PSIKÉ DELOUN ARTS</h2>
+            <p class="sobre-intro">
+                Desde 2015, produzimos e instalamos tendas em malha para cenografia e estruturas especiais em todo o Brasil. 
+                Somos especialistas em projetos sob medida, com acabamento premium e foco em impacto visual — entregando soluções 
+                personalizadas para eventos que exigem presença.
+            </p>
+
+            <!-- Galeria de Imagens e Vídeos -->
+            <div class="sobre-gallery">
+                <div class="gallery-main-wrapper">
+                    <button class="gallery-nav-btn gallery-nav-prev" onclick="galleryPrevious()" aria-label="Anterior">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                    </button>
+                    <div class="gallery-main" id="galleryMain">
+                        <img src="assets/images/sobre_nos/foto_render_tenda.png" alt="Render de tenda tensionada" id="galleryMainImage" style="display: block;">
+                        <video id="galleryMainVideo" style="display: none;" controls>
+                            Seu navegador não suporta vídeos.
+                        </video>
+                    </div>
+                    <button class="gallery-nav-btn gallery-nav-next" onclick="galleryNext()" aria-label="Próximo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <h3 class="sobre-subtitle">POR QUE A PSIKÉ</h3>
+            <div class="sobre-benefits-grid">
+                <div class="sobre-benefit-item">
+                    <div class="sobre-benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h4 class="sobre-benefit-title">Produtos exclusivos</h4>
+                </div>
+                <div class="sobre-benefit-item">
+                    <div class="sobre-benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                        </svg>
+                    </div>
+                    <h4 class="sobre-benefit-title">Alta durabilidade</h4>
+                </div>
+                <div class="sobre-benefit-item">
+                    <div class="sobre-benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+                        </svg>
+                    </div>
+                    <h4 class="sobre-benefit-title">Acabamento profissional</h4>
+                </div>
+                <div class="sobre-benefit-item">
+                    <div class="sobre-benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <h4 class="sobre-benefit-title">Montagem rápida e prática</h4>
+                </div>
+                <div class="sobre-benefit-item">
+                    <div class="sobre-benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                    </div>
+                    <h4 class="sobre-benefit-title">Estrutura própria, não é aluguel</h4>
+                </div>
+                <div class="sobre-benefit-item">
+                    <div class="sobre-benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 13a10 10 0 018-8M12 21a10 10 0 01-7-8m7 8a10 10 0 017-8m-7 8v-8"/>
+                        </svg>
+                    </div>
+                    <h4 class="sobre-benefit-title">Uso ilimitado</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção O que fazemos -->
+    <section class="servicos-section" id="servicos">
+        <div class="container">
+            <h2 class="section-title">O QUE FAZEMOS</h2>
+            
+            <div class="servicos-main-grid">
+                <div class="servico-main-item">
+                    <div class="servico-main-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                    </div>
+                    <h3 class="servico-main-title">Venda de tendas personalizadas</h3>
+                </div>
+                <div class="servico-main-item">
+                    <div class="servico-main-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                        </svg>
+                    </div>
+                    <h3 class="servico-main-title">Montagem e aluguel para eventos</h3>
+                </div>
+                <div class="servico-main-item">
+                    <div class="servico-main-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                    </div>
+                    <h3 class="servico-main-title">Cenografia e ativações</h3>
+                </div>
+                <div class="servico-main-item">
+                    <div class="servico-main-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                        </svg>
+                    </div>
+                    <h3 class="servico-main-title">Aluguel de Domos Geodésicos</h3>
+                </div>
+            </div>
+
+            <h3 class="servicos-subtitle">SERVIÇOS OPCIONAIS</h3>
+            <div class="servicos-optional-grid">
+                <div class="servico-optional-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>Montagem profissional</span>
+                </div>
+                <div class="servico-optional-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>Projetos especiais</span>
+                </div>
+                <div class="servico-optional-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>Acompanhamento técnico</span>
+                </div>
+                <div class="servico-optional-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>Personalização avançada</span>
+                </div>
+            </div>
+
+            <div class="servicos-info">
+                <div class="servicos-info-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <span>Envio para todo o Brasil</span>
+                </div>
+                <div class="servicos-info-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                    </svg>
+                    <span>Personalização total</span>
+                </div>
+                <div class="servicos-info-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/>
+                    </svg>
+                    <span>Suporte para montagem</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Engenharia & Confiança -->
+    <section class="engenharia" id="engenharia">
+        <div class="container">
+            <h2 class="section-title">Precisão e Engenharia</h2>
+            <p class="section-subtitle">Por trás de cada estrutura, há cálculo rigoroso e expertise técnica</p>
+            
+            <div class="engenharia-grid">
+                <div class="engenharia-item">
+                    <div class="engenharia-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3 class="engenharia-title">Modelagem 3D</h3>
+                    <p class="engenharia-description">Projetos detalhados em 3D antes da execução, garantindo precisão e visualização prévia do resultado final.</p>
+                </div>
+
+                <div class="engenharia-item">
+                    <div class="engenharia-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                        </svg>
+                    </div>
+                    <h3 class="engenharia-title">Normas de Segurança</h3>
+                    <p class="engenharia-description">Todas as estruturas atendem às normas de segurança, incluindo teste de combustibilidade, e podem ser aprovadas pelos órgãos competentes.</p>
+                </div>
+
+                <div class="engenharia-item">
+                    <div class="engenharia-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                    </div>
+                    <h3 class="engenharia-title">Bioconstrução</h3>
+                    <p class="engenharia-description">Materiais sustentáveis e processos que respeitam o meio ambiente, alinhados com princípios de bioconstrução.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer de Captura -->
+    <footer class="footer-capture" id="contato">
+        <div class="container">
+            <div class="footer-content">
+                <h2 class="footer-title">Se existe um limite, nós tensionamos até romper.</h2>
+                <p class="footer-subtitle">Vamos construir a identidade do seu próximo evento.</p>
+                <div class="footer-social">
+                    <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20as%20estruturas%20da%20Psiké%20Deloun%20Arts." class="btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                        </svg>
+                        Falar com Nossa Equipe no WhatsApp
+                    </a>
+                    <a href="https://www.instagram.com/psike_deloun/" class="btn-instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        <span>Siga-nos no Instagram</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Imagem em Tela Cheia (Mobile) -->
+    <div class="image-modal" id="imageModal">
+        <div class="image-modal-overlay" onclick="closeImageModal()"></div>
+        <div class="image-modal-content">
+            <button class="image-modal-close" onclick="closeImageModal()" aria-label="Fechar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <img id="modalImage" src="" alt="Imagem ampliada">
+        </div>
+    </div>
+
+    <script src="scripts/main.js"></script>
+    <script>
+        // Array de mídias da galeria (imagens e vídeos)
+        const galleryMedia = [
+            { type: 'image', src: 'assets/images/sobre_nos/foto_render_tenda.png', alt: 'Render de tenda tensionada' },
+            { type: 'image', src: 'assets/images/sobre_nos/foto_tenda_psicodelcia_2.jpg', alt: 'Tenda psicodélica' },
+            { type: 'image', src: 'assets/images/sobre_nos/tenda_aberta.jpg', alt: 'Tenda aberta' },
+            { type: 'image', src: 'assets/images/sobre_nos/foto_tenda_evento.jpg', alt: 'Tenda em evento' },
+            { type: 'image', src: 'assets/images/sobre_nos/foto_construcao_tenda.jpg', alt: 'Construção de tenda' },
+            { type: 'image', src: 'assets/images/sobre_nos/RENDER TENDA 16X16M LOSANGO.png', alt: 'Render tenda losango' },
+            { type: 'image', src: 'assets/images/sobre_nos/domo_2.jpg', alt: 'Domo geodésico' },
+            { type: 'video', src: 'assets/images/sobre_nos/video_palhacos_com_tenda.mp4', alt: 'Vídeo: Palhaços com tenda' },
+            { type: 'video', src: 'assets/images/sobre_nos/video_construcao_insitucional.mp4', alt: 'Vídeo: Construção institucional' }
+        ];
+        
+        let currentGalleryIndex = 0;
+        
+        // Função para trocar mídia da galeria
+        function changeGalleryMedia(index) {
+            if (index < 0 || index >= galleryMedia.length) return;
+            
+            currentGalleryIndex = index;
+            const media = galleryMedia[index];
+            const mainImage = document.getElementById('galleryMainImage');
+            const mainVideo = document.getElementById('galleryMainVideo');
+            
+            if (media.type === 'image') {
+                // Mostrar imagem, esconder vídeo
+                if (mainImage) {
+                    mainImage.src = media.src;
+                    mainImage.alt = media.alt;
+                    mainImage.style.display = 'block';
+                }
+                if (mainVideo) {
+                    mainVideo.pause();
+                    mainVideo.src = '';
+                    mainVideo.style.display = 'none';
+                }
+            } else if (media.type === 'video') {
+                // Mostrar vídeo, esconder imagem
+                if (mainVideo) {
+                    mainVideo.src = media.src;
+                    mainVideo.style.display = 'block';
+                }
+                if (mainImage) {
+                    mainImage.style.display = 'none';
+                }
+            }
+        }
+        
+        // Função para próxima mídia
+        function galleryNext() {
+            const nextIndex = (currentGalleryIndex + 1) % galleryMedia.length;
+            changeGalleryMedia(nextIndex);
+        }
+        
+        // Função para mídia anterior
+        function galleryPrevious() {
+            const prevIndex = (currentGalleryIndex - 1 + galleryMedia.length) % galleryMedia.length;
+            changeGalleryMedia(prevIndex);
+        }
+        
+        // Navegação com teclado
+        document.addEventListener('keydown', function(e) {
+            const gallery = document.querySelector('.sobre-gallery');
+            if (gallery) {
+                const rect = gallery ? gallery.getBoundingClientRect() : null;
+                if (rect && rect.top < window.innerHeight && rect.bottom > 0) {
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        galleryPrevious();
+                    } else if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        galleryNext();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
