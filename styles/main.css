@@ -1733,6 +1733,21 @@ section {
     line-height: 1.5;
 }
 
+/* Mensagem informativa para tendas Mandala */
+.mandala-info-message {
+    width: 100% !important;
+    display: block;
+    box-sizing: border-box;
+    grid-column: 1 / -1;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-xs);
+    background-color: var(--color-bg-primary);
+    border-radius: 6px;
+    border-left: 3px solid var(--color-accent-primary);
+}
+
 /* ============================================
    Responsividade
    ============================================ */

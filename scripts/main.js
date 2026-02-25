@@ -10,6 +10,65 @@ const WHATSAPP_MESSAGE = 'Olá! Gostaria de saber mais sobre as estruturas da Ps
 const PRICE_PER_SQUARE_METER = 22.00; // R$ 22,00 por m²
 
 // ============================================
+// Áreas Fixas para Tendas Mandala
+// ============================================
+
+// Mapeamento de áreas fixas para tendas mandala (cálculo diferente)
+const MANDALA_FIXED_AREAS = {
+    '8x8_tenda1': 51,
+    '11x11_tenda2': 86,
+    '13x13_tenda3': 129,
+    '11x11_tenda4': 93,
+    '14x14_tenda5': 155,
+    '14x14_tenda6': 155,
+    '21x21_tenda7': 326,
+    '23x23_tenda8': 344,
+    '24x24_tenda9': 460,
+    '26x26_tenda10': 480,
+    '33x33_tenda11': 754
+};
+
+// Mapeamento de preços fixos para tendas mandala
+const MANDALA_FIXED_PRICES = {
+    '8x8_tenda1': 1122.00,
+    '11x11_tenda2': 1892.00,
+    '13x13_tenda3': 2838.00,
+    '11x11_tenda4': 2046.00,
+    '14x14_tenda5': 3410.00,
+    '14x14_tenda6': 3410.00,
+    '21x21_tenda7': 7172.00,
+    '23x23_tenda8': 7568.00,
+    '24x24_tenda9': 10120.00,
+    '26x26_tenda10': 10560.00,
+    '33x33_tenda11': 16588.00
+};
+
+// Função para obter preço fixo de uma tenda MANDALA
+function getMandalaFixedPrice(tendaCode, width, height) {
+    if (tendaCode) {
+        const key = `${width}x${height}_${tendaCode}`;
+        return MANDALA_FIXED_PRICES[key] || null;
+    }
+    return null;
+}
+
+// Tornar função acessível globalmente
+window.getMandalaFixedPrice = getMandalaFixedPrice;
+
+// Função para obter área de uma tenda (usa área fixa para MANDALA)
+function getTentArea(type, width, height, tendaCode) {
+    if (type === 'MANDALA' && tendaCode) {
+        // Criar chave no formato widthxheight_tendaX
+        const key = `${width}x${height}_${tendaCode}`;
+        if (MANDALA_FIXED_AREAS[key]) {
+            return MANDALA_FIXED_AREAS[key];
+        }
+    }
+    // Para outros tipos ou se não encontrar, calcular normalmente
+    return width * height;
+}
+
+// ============================================
 // Catálogo de Tendas
 // ============================================
 
@@ -188,7 +247,8 @@ const MANDALA_IMAGES = [
     { type: 'MANDALA', folder: 'TENDA 10', filename: '26x26_tenda10.png' },
     { type: 'MANDALA', folder: 'TENDA 10', filename: '26x26_tenda10(1).png' },
     { type: 'MANDALA', folder: 'TENDA 10', filename: '26X26_tenda10(2).png' },
-    { type: 'MANDALA', folder: 'TENDA 10', filename: '26x26_tenda10(3).png' }
+    { type: 'MANDALA', folder: 'TENDA 10', filename: '26x26_tenda10(3).png' },
+    { type: 'MANDALA', folder: 'TENDA 11', filename: '33x33_tenda11.png' }
 ];
 
 // Combinar todas as imagens e gerar fullPath
@@ -222,12 +282,16 @@ function buildTentCatalog() {
         const imagePath = imageData.fullPath || `assets/images/catalogo/${imageData.filename || imageData}`;
         
         if (!catalogMap.has(baseId)) {
+            // Calcular área (fixa para MANDALA, calculada para outros)
+            const area = getTentArea(parsed.type, parsed.width, parsed.height, parsed.tendaCode);
+            
             // Primeira imagem deste baseId - será a principal
             catalogMap.set(baseId, {
                 baseId: baseId,
                 id: baseId,
                 width: parsed.width,
                 height: parsed.height,
+                area: area,
                 tendaCode: parsed.tendaCode,
                 tendaNumber: parsed.tendaNumber,
                 type: parsed.type,
@@ -771,20 +835,16 @@ function initCart() {
                     return;
                 }
                 
-                const area = calculateArea(height, width);
-                const price = area * PRICE_PER_SQUARE_METER;
-                
-                // Criar nome com dimensões e área
-                const tentName = `Tenda ${width}m × ${height}m (${area.toFixed(0)}m²)`;
-                
-                // Buscar tendaCode, tipo e variação do catálogo se houver ID na URL
+                // Buscar tenda do catálogo para obter informações completas
+                const urlParams = new URLSearchParams(window.location.search);
+                const tentId = urlParams.get('id');
                 let tendaCode = null;
                 let tentType = null;
                 let variation = null;
-                let currentImagePath = productImage; // Usar imagem padrão do botão
+                let currentImagePath = productImage;
+                let finalAreaForCart = calculateArea(height, width);
+                let finalPrice = finalAreaForCart * PRICE_PER_SQUARE_METER;
                 
-                const urlParams = new URLSearchParams(window.location.search);
-                const tentId = urlParams.get('id');
                 if (tentId && typeof TENT_CATALOG !== 'undefined') {
                     const tent = TENT_CATALOG.find(t => t.baseId === tentId);
                     if (tent) {
@@ -794,15 +854,24 @@ function initCart() {
                         if (tent.type) {
                             tentType = tent.type;
                         }
+                        // Usar área do catálogo se disponível (fixa para MANDALA)
+                        if (tent.area) {
+                            finalAreaForCart = tent.area;
+                        }
+                        // Se for MANDALA, usar preço fixo
+                        if (tentType === 'MANDALA' && tendaCode) {
+                            const fixedPrice = getMandalaFixedPrice(tendaCode, tent.width, tent.height);
+                            if (fixedPrice) {
+                                finalPrice = fixedPrice;
+                            }
+                        }
                         // Capturar imagem e variação atual do carrossel (se disponível)
                         if (typeof window.currentCarouselIndex !== 'undefined' && typeof window.carouselImages !== 'undefined' && window.carouselImages.length > 0) {
                             const currentIndex = window.currentCarouselIndex;
                             const currentImage = window.carouselImages[currentIndex];
-                            // Usar a imagem atual do carrossel
                             if (currentImage && currentImage.image) {
                                 currentImagePath = currentImage.image;
                             }
-                            // Se a imagem atual tem uma variação definida, usar ela
                             if (currentImage && currentImage.variation !== null && currentImage.variation !== undefined) {
                                 variation = currentImage.variation;
                             }
@@ -810,15 +879,18 @@ function initCart() {
                     }
                 }
                 
+                // Criar nome com dimensões e área correta
+                const tentName = `Tenda ${width}m × ${height}m (${finalAreaForCart.toFixed(0)}m²)`;
+                
                 addToCart({
                     id: productId,
                     name: tentName,
-                    image: currentImagePath, // Usar imagem atual do carrossel
+                    image: currentImagePath,
                     specs: productSpecs,
                     height: height,
                     width: width,
-                    area: area,
-                    price: price,
+                    area: finalAreaForCart,
+                    price: finalPrice,
                     isTent: true,
                     tendaCode: tendaCode,
                     type: tentType,
@@ -896,7 +968,8 @@ function addToCart(product) {
         newItem.area = product.area;
         newItem.price = product.price;
         // Atualizar nome para incluir dimensões e área
-        const area = product.width * product.height;
+        // Usar área do produto se disponível (já calculada corretamente), senão calcular
+        const area = product.area || (product.width * product.height);
         newItem.name = `Tenda ${product.width}m × ${product.height}m (${area.toFixed(0)}m²)`;
         // Adicionar código da tenda se disponível
         if (product.tendaCode) {
@@ -1439,12 +1512,15 @@ function createProductCard(tent) {
     const image = tent.mainImage || (tent.allImages && tent.allImages[0] ? tent.allImages[0].image : '');
     const canCalculate = tent.canCalculatePrice !== false; // Default true se não especificado
     
+    // Calcular área (fixa para MANDALA, calculada para outros)
+    const tentArea = tent.area || (tent.width * tent.height);
+    
     // Título diferente para MANDALA
     let title;
     if (canCalculate) {
-        title = `Tenda ${tent.width}m × ${tent.height}m (${(tent.width * tent.height).toFixed(0)}m²)`;
+        title = `Tenda ${tent.width}m × ${tent.height}m (${tentArea.toFixed(0)}m²)`;
     } else {
-        title = `Tenda ${tent.width}m × ${tent.height}m`;
+        title = `Tenda ${tent.width}m × ${tent.height}m (${tentArea.toFixed(0)}m²)`;
     }
     
     return `

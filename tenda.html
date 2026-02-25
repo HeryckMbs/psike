@@ -58,7 +58,7 @@
                     <!-- Foto -->
                     <div class="product-gallery">
                         <div class="product-main-image">
-                            <img src="assets/images/catalogo/14x14.png" alt="Tenda tensionada personalizada" id="mainProductImage">
+                            <img src="" alt="Tenda tensionada personalizada" id="mainProductImage">
                             <!-- Setas de navegação do carrossel (apenas se houver variações) -->
                             <button class="carousel-nav carousel-prev" id="carouselPrev" onclick="previousImage()" aria-label="Imagem anterior" style="display: none;">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -109,7 +109,7 @@
                         
                         <!-- Ações dentro do mesmo card -->
                         <div class="product-actions-large">
-                            <button class="btn-primary-large" id="btn-add-tent-large" data-product-id="tendas" data-product-name="Tendas Tensionadas Personalizadas" data-product-image="assets/images/catalogo/14x14.png" data-product-specs="Envio nacional, consultar frete.">
+                            <button class="btn-primary-large" id="btn-add-tent-large" data-product-id="tendas" data-product-name="Tendas Tensionadas Personalizadas" data-product-image="" data-product-specs="Envio nacional, consultar frete.">
                                 Adicionar ao Carrinho
                             </button>
                             <a href="produtos.html" class="product-link-secondary">Ver Outros Produtos</a>
@@ -219,6 +219,15 @@
         // Variável global para armazenar tipo da tenda atual
         let currentTentType = null;
         let currentTentCanCalculate = true;
+        let currentTent = null; // Armazenar objeto da tenda atual
+        
+        // Função auxiliar para obter preço fixo (usa função global de main.js)
+        function getMandalaFixedPriceLocal(tendaCode, width, height) {
+            if (typeof window.getMandalaFixedPrice === 'function') {
+                return window.getMandalaFixedPrice(tendaCode, width, height);
+            }
+            return null;
+        }
 
         // Calcular preço na página de detalhes
         window.calculateTentPriceLarge = function(productId) {
@@ -232,18 +241,38 @@
                 return 0;
             }
             
-            // Se não pode calcular (MANDALA), mostrar "Sob consulta"
-            if (!currentTentCanCalculate) {
-                if (priceLabel) {
-                    priceLabel.textContent = 'Preço:';
+            // Se não pode calcular (MANDALA), usar preço fixo
+            if (!currentTentCanCalculate && currentTent) {
+                const fixedPrice = getMandalaFixedPriceLocal(currentTent.tendaCode, currentTent.width, currentTent.height);
+                if (fixedPrice) {
+                    if (priceLabel) {
+                        priceLabel.textContent = 'Preço:';
+                    }
+                    priceDisplay.textContent = new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }).format(fixedPrice);
+                    if (addButton) {
+                        addButton.disabled = false;
+                        addButton.style.opacity = '1';
+                        addButton.style.cursor = 'pointer';
+                    }
+                    return fixedPrice;
+                } else {
+                    // Se não tem preço fixo, mostrar "Sob consulta"
+                    if (priceLabel) {
+                        priceLabel.textContent = 'Preço:';
+                    }
+                    priceDisplay.textContent = 'Sob consulta com o vendedor';
+                    if (addButton) {
+                        addButton.disabled = false;
+                        addButton.style.opacity = '1';
+                        addButton.style.cursor = 'pointer';
+                    }
+                    return 0;
                 }
-                priceDisplay.textContent = 'Sob consulta com o vendedor';
-                if (addButton) {
-                    addButton.disabled = false;
-                    addButton.style.opacity = '1';
-                    addButton.style.cursor = 'pointer';
-                }
-                return 0;
             }
             
             const height = parseFloat(heightInput.value) || 0;
@@ -314,7 +343,7 @@
 
             grid.innerHTML = relatedTents.map(tent => {
                 // Usar mainImage se disponível, senão usar a primeira imagem disponível
-                const imageSrc = tent.mainImage || (tent.allImages && tent.allImages.length > 0 ? tent.allImages[0].image : 'assets/images/catalogo/14x14.png');
+                const imageSrc = tent.mainImage || (tent.allImages && tent.allImages.length > 0 ? tent.allImages[0].image : '');
                 return `
                 <article class="related-product-card">
                     <a href="tenda.html?w=${tent.width}&h=${tent.height}&id=${tent.baseId || tent.id}">
@@ -322,7 +351,7 @@
                             <img src="${imageSrc}" alt="Tenda ${tent.width}m x ${tent.height}m" loading="lazy">
                         </div>
                         <div class="related-product-content">
-                            <h3 class="related-product-title">${formatTentTitle(tent.width, tent.height)}</h3>
+                            <h3 class="related-product-title">${formatTentTitle(tent.width, tent.height, tent)}</h3>
                         </div>
                     </a>
                 </article>
@@ -341,10 +370,33 @@
         }
 
         // Função auxiliar para formatar título com área
-        function formatTentTitle(width, height) {
+        function formatTentTitle(width, height, tent = null) {
             if (width > 0 && height > 0) {
-                const area = (width * height).toFixed(0);
-                return `Tenda ${width}m × ${height}m (${area}m²)`;
+                // Se tiver objeto tent com área (para MANDALA), usar área fixa
+                let area;
+                if (tent && tent.area) {
+                    area = tent.area;
+                } else if (tent && tent.type === 'MANDALA' && tent.tendaCode) {
+                    // Buscar área fixa para MANDALA
+                    const mandalaAreas = {
+                        '8x8_tenda1': 51,
+                        '11x11_tenda2': 86,
+                        '13x13_tenda3': 129,
+                        '11x11_tenda4': 93,
+                        '14x14_tenda5': 155,
+                        '14x14_tenda6': 155,
+                        '21x21_tenda7': 326,
+                        '23x23_tenda8': 344,
+                        '24x24_tenda9': 460,
+                        '26x26_tenda10': 480,
+                        '33x33_tenda11': 754
+                    };
+                    const key = `${width}x${height}_${tent.tendaCode}`;
+                    area = mandalaAreas[key] || (width * height);
+                } else {
+                    area = width * height;
+                }
+                return `Tenda ${width}m × ${height}m (${area.toFixed(0)}m²)`;
             }
             return 'Tendas Tensionadas Personalizadas';
         }
@@ -550,6 +602,7 @@
                     // Armazenar tipo e capacidade de cálculo
                     currentTentType = tent.type;
                     currentTentCanCalculate = tent.canCalculatePrice !== false;
+                    currentTent = tent; // Armazenar objeto completo da tenda
                     
                     // Inicializar carrossel
                     initializeCarousel(tent);
@@ -573,7 +626,7 @@
                     const dimensionsHeader = document.querySelector('.dimensions-header');
                     const dimensionsSubtitle = document.querySelector('.dimensions-subtitle-large');
                     
-                    // Se MANDALA, desabilitar inputs e alterar texto
+                    // Se MANDALA, desabilitar inputs e mostrar preço fixo
                     if (!currentTentCanCalculate) {
                         if (widthInput) {
                             widthInput.disabled = true;
@@ -586,12 +639,29 @@
                             heightInput.style.cursor = 'not-allowed';
                         }
                         if (dimensionsSubtitle) {
-                            dimensionsSubtitle.textContent = 'Sob consulta com o vendedor';
+                            dimensionsSubtitle.textContent = 'Preço fixo conforme modelo';
                         }
                         // Esconder botões de incremento/decremento
                         document.querySelectorAll('.dimension-input-btn').forEach(btn => {
                             btn.style.display = 'none';
                         });
+                        
+                        // Adicionar mensagem informativa sobre medidas diferentes
+                        const dimensionsContainer = document.querySelector('.dimensions-inputs-large');
+                        if (dimensionsContainer) {
+                            // Verificar se já existe a mensagem
+                            let infoMessage = dimensionsContainer.querySelector('.mandala-info-message');
+                            if (!infoMessage) {
+                                infoMessage = document.createElement('p');
+                                infoMessage.className = 'mandala-info-message';
+                                infoMessage.style.cssText = 'width: 100% !important; display: block; box-sizing: border-box; grid-column: 1 / -1; color: var(--color-text-secondary); font-size: 0.875rem; margin-top: var(--spacing-sm); padding: var(--spacing-xs); background-color: var(--color-bg-primary); border-radius: 6px; border-left: 3px solid var(--color-accent-primary);';
+                                infoMessage.textContent = '💡 Se você deseja medidas diferentes deste modelo, informe nas observações do carrinho.';
+                                dimensionsContainer.appendChild(infoMessage);
+                            }
+                        }
+                        
+                        // Calcular e mostrar preço fixo
+                        calculateTentPriceLarge('tendas');
                     } else {
                         if (widthInput) {
                             widthInput.disabled = false;
@@ -630,9 +700,9 @@
                         if (widthInput && heightInput && widthInput.value && heightInput.value) {
                             const width = parseFloat(widthInput.value) || 0;
                             const height = parseFloat(heightInput.value) || 0;
-                            pageTitle.textContent = formatTentTitle(width, height);
+                            pageTitle.textContent = formatTentTitle(width, height, tent);
                         } else {
-                            pageTitle.textContent = formatTentTitle(tent.width, tent.height);
+                            pageTitle.textContent = formatTentTitle(tent.width, tent.height, tent);
                         }
                     }
                     
