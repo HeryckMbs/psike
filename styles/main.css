@@ -1154,7 +1154,7 @@ section {
     gap: var(--spacing-xs);
     margin-top: var(--spacing-xs);
     margin-bottom: var(--spacing-xs);
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--spacing-xs) 0 0 0;
     background-color: var(--color-bg-tertiary);
     border-radius: 4px;
 }

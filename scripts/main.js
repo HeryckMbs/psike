@@ -791,10 +791,24 @@ function initCart() {
     if (savedCart) {
         try {
             cart = JSON.parse(savedCart);
-            // Garantir que itens antigos tenham a propriedade observations
+            // Garantir que itens antigos tenham a propriedade observations e valores corretos para MANDALA
             cart = cart.map(item => {
                 if (!item.hasOwnProperty('observations')) {
                     item.observations = '';
+                }
+                // Corrigir área e preço para MANDALA se necessário
+                if (item.isTent && item.type === 'MANDALA' && item.tendaCode && item.width && item.height) {
+                    const key = `${item.width}x${item.height}_${item.tendaCode}`;
+                    if (MANDALA_FIXED_AREAS[key]) {
+                        item.area = MANDALA_FIXED_AREAS[key];
+                    }
+                    if (MANDALA_FIXED_PRICES[key]) {
+                        item.price = MANDALA_FIXED_PRICES[key];
+                    }
+                    // Atualizar nome com área correta
+                    if (item.area) {
+                        item.name = `Tenda ${item.width}m × ${item.height}m (${item.area.toFixed(0)}m²)`;
+                    }
                 }
                 return item;
             });
@@ -965,12 +979,29 @@ function addToCart(product) {
     if (product.isTent && product.height && product.width) {
         newItem.height = product.height;
         newItem.width = product.width;
-        newItem.area = product.area;
-        newItem.price = product.price;
+        
+        // Para MANDALA, garantir que área e preço sejam os fixos
+        let finalArea = product.area;
+        let finalPrice = product.price;
+        
+        if (product.type === 'MANDALA' && product.tendaCode) {
+            // Buscar área fixa
+            const key = `${product.width}x${product.height}_${product.tendaCode}`;
+            if (MANDALA_FIXED_AREAS[key]) {
+                finalArea = MANDALA_FIXED_AREAS[key];
+            }
+            // Buscar preço fixo
+            if (MANDALA_FIXED_PRICES[key]) {
+                finalPrice = MANDALA_FIXED_PRICES[key];
+            }
+        }
+        
+        newItem.area = finalArea;
+        newItem.price = finalPrice;
+        
         // Atualizar nome para incluir dimensões e área
-        // Usar área do produto se disponível (já calculada corretamente), senão calcular
-        const area = product.area || (product.width * product.height);
-        newItem.name = `Tenda ${product.width}m × ${product.height}m (${area.toFixed(0)}m²)`;
+        newItem.name = `Tenda ${product.width}m × ${product.height}m (${finalArea.toFixed(0)}m²)`;
+        
         // Adicionar código da tenda se disponível
         if (product.tendaCode) {
             newItem.tendaCode = product.tendaCode;
@@ -1227,10 +1258,12 @@ function createCartItemElement(item) {
     
     if (item.isTent && item.height && item.width && item.area && item.price) {
         const itemTotalPrice = item.price * item.quantity;
+        // Formatar área com vírgula como separador decimal
+        const areaFormatted = item.area.toFixed(2).replace('.', ',');
         dimensionsInfo = `
             <div class="cart-item-dimensions">
                 <p class="cart-item-dimensions-text">
-                    <strong>Dimensões:</strong> ${item.height}m × ${item.width}m = ${item.area.toFixed(2)}m²
+                    <strong>Área:</strong> ${areaFormatted}m²
                 </p>
             </div>
         `;
