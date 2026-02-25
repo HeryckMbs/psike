@@ -70,13 +70,11 @@
                         <div class="product-badge">Comprar / Uso Ilimitado</div>
                     </div>
                     <div class="product-content">
-                        <h3 class="product-title">Tendas Tensionadas Personalizadas</h3>
-                        <p class="product-description">Malhas tensionadas de alto impacto, projetadas sob medida para criar espaços únicos.</p>
+                        <h3 class="product-title">Tendas Personalizadas</h3>
+                        <p class="product-description">Tendas tensionadas de alto impacto, projetadas sob medida para criar espaços únicos.</p>
                         <ul class="product-specs">
-                            <li> Envio para todo o Brasil</li>
-                            <li> Personalização total</li>
-                            <li> Acabamento profissional</li>
-                            <li> Montagem rápida e prática</li>
+                            <li>Envio nacional</li>
+                            <li>Consultar frete</li>
                         </ul>
                     </div>
                 </article>
@@ -89,7 +87,7 @@
                     </div>
                     <div class="product-content">
                         <h3 class="product-title">Serviços adicionais</h3>
-                        <p class="product-description">Serviço completo de locação com equipe especializada. Ideal para eventos corporativos, casamentos e festivais. Montagem profissional e desmontagem incluídas.</p>
+                        <p class="product-description">Serviço completo de locação com equipe especializada. Ideal para eventos corporativos, casamentos e festivais.</p>
                         <ul class="product-specs">
                             <li> Montagem profissional</li>
                             <li> Projetos Especiais</li>
@@ -144,7 +142,7 @@
                         </svg>
                     </button>
                     <div class="gallery-main" id="galleryMain">
-                        <img src="assets/images/sobre_nos/foto_render_tenda.png" alt="Render de tenda tensionada" id="galleryMainImage" style="display: block;">
+                        <img src="" alt="" id="galleryMainImage" style="display: block;">
                         <video id="galleryMainVideo" style="display: none;" controls>
                             Seu navegador não suporta vídeos.
                         </video>
@@ -461,18 +459,26 @@
     <script src="scripts/main.js"></script>
     <script>
         // Array de mídias da galeria (imagens e vídeos)
+        // Configure a propriedade 'order' para definir a ordem de exibição
         const galleryMedia = [
-            { type: 'image', src: 'assets/images/sobre_nos/foto_render_tenda.png', alt: 'Render de tenda tensionada' },
-            { type: 'image', src: 'assets/images/sobre_nos/foto_tenda_psicodelcia_2.jpg', alt: 'Tenda psicodélica' },
-            { type: 'image', src: 'assets/images/sobre_nos/tenda_aberta.jpg', alt: 'Tenda aberta' },
-            { type: 'image', src: 'assets/images/sobre_nos/foto_tenda_evento.jpg', alt: 'Tenda em evento' },
-            { type: 'image', src: 'assets/images/sobre_nos/foto_construcao_tenda.jpg', alt: 'Construção de tenda' },
-            { type: 'image', src: 'assets/images/sobre_nos/RENDER TENDA 16X16M LOSANGO.png', alt: 'Render tenda losango' },
-            { type: 'image', src: 'assets/images/sobre_nos/domo_2.jpg', alt: 'Domo geodésico' },
-            { type: 'video', src: 'assets/images/sobre_nos/video_palhacos_com_tenda.mp4', alt: 'Vídeo: Palhaços com tenda' }
-        ];
+            { type: 'image', src: 'assets/images/sobre_nos/foto_render_tenda.png', alt: 'Render de tenda tensionada', order: 2 },
+            { type: 'image', src: 'assets/images/sobre_nos/tenda_aberta.jpg', alt: 'Tenda aberta', order: 7 },
+            { type: 'image', src: 'assets/images/sobre_nos/foto_tenda_evento.jpg', alt: 'Tenda em evento', order: 3 },
+            { type: 'image', src: 'assets/images/sobre_nos/foto_construcao_tenda.jpg', alt: 'Construção de tenda', order: 4 },
+            { type: 'image', src: 'assets/images/sobre_nos/RENDER TENDA 16X16M LOSANGO.png', alt: 'Render tenda losango', order: 5 },
+            { type: 'image', src: 'assets/images/sobre_nos/domo_2.jpg', alt: 'Domo geodésico', order: 6 },
+            { type: 'image', src: 'assets/images/sobre_nos/foto_tenda_psicodelcia_2.jpg', alt: 'Tenda psicodélica', order: 1 },
+            { type: 'video', src: 'assets/images/sobre_nos/video_palhacos_com_tenda.mp4', alt: 'Vídeo: Palhaços com tenda', order: 8 }
+        ].sort((a, b) => a.order - b.order);
         
         let currentGalleryIndex = 0;
+        
+        // Inicializar galeria com a primeira mídia ordenada
+        function initializeGallery() {
+            if (galleryMedia.length > 0) {
+                changeGalleryMedia(0);
+            }
+        }
         
         // Função para trocar mídia da galeria
         function changeGalleryMedia(index) {
@@ -535,6 +541,18 @@
                 }
             }
         });
+        
+        // Inicializar galeria quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeGallery();
+        });
+        
+        // Fallback caso o DOMContentLoaded já tenha sido disparado
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeGallery);
+        } else {
+            initializeGallery();
+        }
     </script>
 </body>
 </html>

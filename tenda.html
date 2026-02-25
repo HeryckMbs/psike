@@ -83,10 +83,10 @@
                         </div>
                         
                         <p class="product-page-description">
-                            Malhas tensionadas sob medida, ideais para eventos e instalações fixas.                        </p>
+                            Tendas personalizadas sob medida, ideais para eventos e instalações fixas.                        </p>
                         <div class="dimensions-inputs-large">
                             <div class="dimension-input-group-large">
-                                <label for="tent-height-large" class="dimension-label-large">Altura (m)</label>
+                                <label for="tent-height-large" class="dimension-label-large">Comprimento (m)</label>
                                 <div class="dimension-input-wrapper">
                                     <input type="number" id="tent-height-large" class="dimension-input-large" min="0" step="0.1" placeholder="Ex: 5.0" oninput="calculateTentPriceLarge('tendas'); updateProductTitle();">
                                     <button type="button" class="dimension-input-btn dimension-input-btn-up" onclick="incrementDimension('tent-height-large')">↑</button>
@@ -109,7 +109,7 @@
                         
                         <!-- Ações dentro do mesmo card -->
                         <div class="product-actions-large">
-                            <button class="btn-primary-large" id="btn-add-tent-large" data-product-id="tendas" data-product-name="Tendas Tensionadas Personalizadas" data-product-image="assets/images/catalogo/14x14.png" data-product-specs="Envio nacional, Modelagem 3D inclusa">
+                            <button class="btn-primary-large" id="btn-add-tent-large" data-product-id="tendas" data-product-name="Tendas Tensionadas Personalizadas" data-product-image="assets/images/catalogo/14x14.png" data-product-specs="Envio nacional, consultar frete.">
                                 Adicionar ao Carrinho
                             </button>
                             <a href="produtos.html" class="product-link-secondary">Ver Outros Produtos</a>
@@ -117,27 +117,75 @@
                     </div>
                 </div>
 
-                <!-- Linha 2: Informações (card único) -->
+                <!-- Linha 2: Informações em cards -->
                 <div class="product-info-full">
-                    <div class="product-specs-large">
-                        <h3 class="specs-title">Especificações</h3>
-                        <ul class="specs-list">
-                            <li>Envio para todo o Brasil</li>
-                            <li>Dimensões e cores personalizadas</li>
-                            <li>Materiais de alta durabilidade</li>
-                            <li>Acabamento profissional</li>
-                        </ul>
+                    <div class="product-specs-grid">
+                        <!-- Card 1: Especificações -->
+                        <div class="spec-card">
+                            <h3 class="shipping-title">ESPECIFICAÇÕES</h3>
+                            <ul class="shipping-list">
+                                <li>Envio para todo o Brasil</li>
+                                <li>Suplex - gramatura 280</li>
+                                <li>Dimensões e cores personalizadas</li>
+                                <li>Materiais de alta durabilidade</li>
+                                <li>Acabamento profissional</li>
+                            </ul>
+                        </div>
                         
-                        <h3 class="shipping-title">FRETES E CONDIÇÕES</h3>
-                        <ul class="shipping-list">
-                            <li>Frete não incluso</li>
-                            <li>Valor do frete varia com o peso e modelo</li>
-                            <li>Consulte valores e condições</li>
-                            <li>Valores das tendas sujeitos a alteração</li>
-                        </ul>
-                        <div class="shipping-not-included">
+                        <!-- Card 2: Formas de Pagamento -->
+                        <div class="spec-card">
+                            <h3 class="shipping-title">FORMAS DE PAGAMENTO</h3>
+                            <ul class="shipping-list">
+                                <li>PIX</li>
+                                <li>Cartão de crédito</li>
+                                <li>Cartão de débito</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Card 3: Prazo -->
+                        <div class="spec-card">
+                            <h3 class="shipping-title">PRAZO</h3>
+                            <ul class="shipping-list">
+                                <li>Produção: 8 a 10 dias após confirmação</li>
+                                <li>Prazo de entrega: conforme localidade e modalidade de frete escolhida</li>
+                                <li>Consulte prazo específico para seu projeto</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Card 4: Frete e Condições -->
+                        <div class="spec-card">
+                            <h3 class="shipping-title">FRETES E CONDIÇÕES</h3>
+                            <ul class="shipping-list">
+                                <li>Frete não incluso</li>
+                                <li>Valor do frete varia com o peso e modelo</li>
+                                <li>Consulte valores e condições</li>
+                                <li>Valores das tendas sujeitos a alteração</li>
+                                <li><strong>Obs:</strong> O valor do produto é cobrado separado do valor do frete.</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Card 5: Incluso -->
+                        <div class="spec-card">
+                            <h4 class="shipping-not-included-title">INCLUSO</h4>
+                            <p class="shipping-not-included-text">Tenda em malha tensionada personalizada conforme especificações, acabamento profissional, costuras reforçadas, olhais para fixação, e orientações de montagem.</p>
+                        </div>
+                        
+                        <!-- Card 6: Não Incluso -->
+                        <div class="spec-card">
                             <h4 class="shipping-not-included-title">NÃO INCLUSO</h4>
                             <p class="shipping-not-included-text">Cordas, estruturas de sustentação, frete e mão de obra presencial (quando não contratada).</p>
+                        </div>
+                        
+                        <!-- Card 7: Observações -->
+                        <div class="spec-card spec-card-full">
+                            <h3 class="shipping-title">OBSERVAÇÕES</h3>
+                            <ul class="shipping-list">
+                                <li>As imagens representam o resultado final</li>
+                                <li>As cores podem variar conforme o monitor e impressão</li>
+                                <li>Dimensões personalizadas sujeitas a aprovação técnica</li>
+                                <li>Para projetos especiais, consulte nossa equipe para orçamento detalhado</li>
+                                <li>Recomendamos consulta prévia para projetos com dimensões acima de 20m²</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -168,14 +216,33 @@
     <script>
         // Função removida - apenas foto principal da tenda será exibida
 
+        // Variável global para armazenar tipo da tenda atual
+        let currentTentType = null;
+        let currentTentCanCalculate = true;
+
         // Calcular preço na página de detalhes
         window.calculateTentPriceLarge = function(productId) {
             const heightInput = document.getElementById('tent-height-large');
             const widthInput = document.getElementById('tent-width-large');
             const priceDisplay = document.getElementById('tent-price-value-large');
+            const priceLabel = document.querySelector('#tent-price-display-large .price-label-large');
             const addButton = document.getElementById('btn-add-tent-large');
             
             if (!heightInput || !widthInput || !priceDisplay) {
+                return 0;
+            }
+            
+            // Se não pode calcular (MANDALA), mostrar "Sob consulta"
+            if (!currentTentCanCalculate) {
+                if (priceLabel) {
+                    priceLabel.textContent = 'Preço:';
+                }
+                priceDisplay.textContent = 'Sob consulta com o vendedor';
+                if (addButton) {
+                    addButton.disabled = false;
+                    addButton.style.opacity = '1';
+                    addButton.style.cursor = 'pointer';
+                }
                 return 0;
             }
             
@@ -185,6 +252,9 @@
             const area = height * width;
             const price = area * 22.00;
             
+            if (priceLabel) {
+                priceLabel.textContent = 'Preço Total:';
+            }
             priceDisplay.textContent = new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
                 currency: 'BRL',
@@ -211,8 +281,8 @@
         function getRelatedTents(currentId) {
             if (typeof TENT_CATALOG === 'undefined') return [];
             
-            // Filtrar tendas diferentes da atual
-            const otherTents = TENT_CATALOG.filter(tent => tent.id !== currentId);
+            // Filtrar tendas diferentes da atual (comparar baseId)
+            const otherTents = TENT_CATALOG.filter(tent => tent.baseId !== currentId);
             
             // Embaralhar e pegar 4 aleatórias
             const shuffled = shuffleArray(otherTents);
@@ -252,7 +322,7 @@
                             <img src="${imageSrc}" alt="Tenda ${tent.width}m x ${tent.height}m" loading="lazy">
                         </div>
                         <div class="related-product-content">
-                            <h3 class="related-product-title">Tenda ${tent.width}m × ${tent.height}m</h3>
+                            <h3 class="related-product-title">${formatTentTitle(tent.width, tent.height)}</h3>
                         </div>
                     </a>
                 </article>
@@ -270,6 +340,15 @@
             };
         }
 
+        // Função auxiliar para formatar título com área
+        function formatTentTitle(width, height) {
+            if (width > 0 && height > 0) {
+                const area = (width * height).toFixed(0);
+                return `Tenda ${width}m × ${height}m (${area}m²)`;
+            }
+            return 'Tendas Tensionadas Personalizadas';
+        }
+
         // Atualizar título dinamicamente
         window.updateProductTitle = function() {
             const widthInput = document.getElementById('tent-width-large');
@@ -280,11 +359,7 @@
                 const width = parseFloat(widthInput.value) || 0;
                 const height = parseFloat(heightInput.value) || 0;
                 
-                if (width > 0 && height > 0) {
-                    pageTitle.textContent = `Tenda ${width}m × ${height}m`;
-                } else {
-                    pageTitle.textContent = 'Tendas Tensionadas Personalizadas';
-                }
+                pageTitle.textContent = formatTentTitle(width, height);
             }
         };
 
@@ -472,6 +547,10 @@
             if (params.id && typeof TENT_CATALOG !== 'undefined') {
                 const tent = TENT_CATALOG.find(t => t.baseId === params.id);
                 if (tent) {
+                    // Armazenar tipo e capacidade de cálculo
+                    currentTentType = tent.type;
+                    currentTentCanCalculate = tent.canCalculatePrice !== false;
+                    
                     // Inicializar carrossel
                     initializeCarousel(tent);
                     
@@ -491,6 +570,46 @@
                     // Preencher dimensões da tenda encontrada
                     const widthInput = document.getElementById('tent-width-large');
                     const heightInput = document.getElementById('tent-height-large');
+                    const dimensionsHeader = document.querySelector('.dimensions-header');
+                    const dimensionsSubtitle = document.querySelector('.dimensions-subtitle-large');
+                    
+                    // Se MANDALA, desabilitar inputs e alterar texto
+                    if (!currentTentCanCalculate) {
+                        if (widthInput) {
+                            widthInput.disabled = true;
+                            widthInput.style.opacity = '0.5';
+                            widthInput.style.cursor = 'not-allowed';
+                        }
+                        if (heightInput) {
+                            heightInput.disabled = true;
+                            heightInput.style.opacity = '0.5';
+                            heightInput.style.cursor = 'not-allowed';
+                        }
+                        if (dimensionsSubtitle) {
+                            dimensionsSubtitle.textContent = 'Sob consulta com o vendedor';
+                        }
+                        // Esconder botões de incremento/decremento
+                        document.querySelectorAll('.dimension-input-btn').forEach(btn => {
+                            btn.style.display = 'none';
+                        });
+                    } else {
+                        if (widthInput) {
+                            widthInput.disabled = false;
+                            widthInput.style.opacity = '1';
+                            widthInput.style.cursor = 'text';
+                        }
+                        if (heightInput) {
+                            heightInput.disabled = false;
+                            heightInput.style.opacity = '1';
+                            heightInput.style.cursor = 'text';
+                        }
+                        if (dimensionsSubtitle) {
+                            dimensionsSubtitle.textContent = 'R$ 22,00 por m²';
+                        }
+                        document.querySelectorAll('.dimension-input-btn').forEach(btn => {
+                            btn.style.display = 'flex';
+                        });
+                    }
                     
                     // Usar dimensões da URL se fornecidas, senão usar da tenda
                     if (params.width && params.height) {
@@ -501,7 +620,7 @@
                         if (heightInput) heightInput.value = tent.height;
                     }
                     
-                    // Calcular preço automaticamente
+                    // Calcular preço automaticamente (ou mostrar "Sob consulta")
                     calculateTentPriceLarge('tendas');
                     updateProductTitle();
                     
@@ -509,9 +628,11 @@
                     const pageTitle = document.querySelector('.product-page-title');
                     if (pageTitle) {
                         if (widthInput && heightInput && widthInput.value && heightInput.value) {
-                            pageTitle.textContent = `Tenda ${widthInput.value}m × ${heightInput.value}m`;
+                            const width = parseFloat(widthInput.value) || 0;
+                            const height = parseFloat(heightInput.value) || 0;
+                            pageTitle.textContent = formatTentTitle(width, height);
                         } else {
-                            pageTitle.textContent = `Tenda ${tent.width}m × ${tent.height}m`;
+                            pageTitle.textContent = formatTentTitle(tent.width, tent.height);
                         }
                     }
                     

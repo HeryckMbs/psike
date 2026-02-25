@@ -13,8 +13,31 @@ const PRICE_PER_SQUARE_METER = 22.00; // R$ 22,00 por m²
 // Catálogo de Tendas
 // ============================================
 
+// Função para extrair número da pasta "TENDA X"
+function extractTendaNumber(folder) {
+    const match = folder.match(/TENDA\s+(\d+)/i);
+    return match ? parseInt(match[1]) : null;
+}
+
 // Função para extrair medidas e código da tenda do nome do arquivo
-function parseTentDimensions(filename) {
+function parseTentDimensions(imageData) {
+    // imageData pode ser string (legado) ou objeto { type, folder, filename, fullPath }
+    let filename, type, folder, tendaNumber;
+    
+    if (typeof imageData === 'string') {
+        // Formato legado - apenas filename
+        filename = imageData;
+        type = null;
+        folder = null;
+        tendaNumber = null;
+    } else {
+        // Novo formato - objeto com todas as informações
+        filename = imageData.filename;
+        type = imageData.type;
+        folder = imageData.folder;
+        tendaNumber = extractTendaNumber(folder);
+    }
+    
     // Remove extensão .png
     let name = filename.replace(/\.png$/i, '');
     
@@ -29,15 +52,25 @@ function parseTentDimensions(filename) {
     if (match1) {
         const width = parseInt(match1[1]);
         const height = parseInt(match1[2]);
-        const tendaCode = `tenda${match1[3]}`;
+        const tendaCodeFromFile = `tenda${match1[3]}`;
         const variation = match1[4] ? parseInt(match1[4]) : null;
-        const baseId = `tenda-${width}x${height}-${tendaCode}`;
+        
+        // Usar tendaNumber da pasta se disponível, senão usar do filename
+        const finalTendaNumber = tendaNumber || parseInt(match1[3]);
+        const finalTendaCode = `tenda${finalTendaNumber}`;
+        
+        // baseId agora inclui type se disponível
+        const baseId = type 
+            ? `tenda-${type}-${width}x${height}-${finalTendaCode}`
+            : `tenda-${width}x${height}-${finalTendaCode}`;
         const id = variation ? `${baseId}-${variation}` : baseId;
         
         return {
             width: width,
             height: height,
-            tendaCode: tendaCode,
+            tendaCode: finalTendaCode,
+            tendaNumber: finalTendaNumber,
+            type: type,
             variation: variation,
             baseId: baseId,
             id: id
@@ -58,13 +91,19 @@ function parseTentDimensions(filename) {
         const width = parseInt(match2[1]);
         const height = parseInt(match2[2]);
         const variation = match2[3] ? parseInt(match2[3]) : null;
-        const baseId = `tenda-${width}x${height}`;
+        
+        // Se temos type e tendaNumber, usar; senão formato legado
+        const baseId = type && tendaNumber
+            ? `tenda-${type}-${width}x${height}-tenda${tendaNumber}`
+            : `tenda-${width}x${height}`;
         const id = variation ? `${baseId}-${variation}` : baseId;
         
         return {
             width: width,
             height: height,
-            tendaCode: null, // Sem código da tenda no formato antigo
+            tendaCode: tendaNumber ? `tenda${tendaNumber}` : null,
+            tendaNumber: tendaNumber,
+            type: type,
             variation: variation,
             baseId: baseId,
             id: id
@@ -74,75 +113,113 @@ function parseTentDimensions(filename) {
     return null;
 }
 
-// Lista de todas as imagens do catálogo
-const TENT_IMAGES = [
-    '4x20_tenda8.png',
-    '4X20_tenda8(1).png',
-    '4x20_tenda8(2).png',
-    '4x20_tenda8(3).png',
-    '6x11_tenda12.png',
-    '7x25_tenda11.png',
-    '7X25_tenda11(1).png',
-    '8X25_tenda9.png',
-    '8x25_tenda9(1).png',
-    '8x25_tenda10.png',
-    '8X25_tenda10(1).png',
-    '8x25_tenda10(2).png',
-    '10x10_ tenda3.png',
-    '10x10_tenda2.png',
-    '10x10_tenda3.png',
-    '10x10_tenda3(1).png',
-    '10x10_tenda3(2).png',
-    '10x10_tenda4.png',
-    '10x10_tenda4(1).png',
-    '10x12_tenda5.png',
-    '10x12_tenda5(1).png',
-    '10x30_tenda14.png',
-    '10x30_tenda16.png',
-    '11x11_tenda1.png',
-    '11x11_tenda21.png',
-    '11x14_tenda7.png',
-    '12x20_tenda15.png',
-    '12x30_tenda16.png',
-    '12x50_tenda13.png',
-    '13x13_tenda1.png',
-    '14x14_tenda22.png',
-    '14x14_tenda22(1).png',
-    '14x14_tenda23.png',
-    '14x14_tendas22.png',
-    '15X20_tenda18.png',
-    '15x50_tenda17.png',
-    '20x20_tenda6.png',
-    '20X20_tenda6(1).png',
-    '20x20_tenda6(2).png',
-    '20x20_tenda6(3).png',
-    '20x20_tenda6(4).png',
-    '20x40_tenda19.png',
-    '20X40_tenda20.png',
-    '20x40_tenda20(1).png',
-    '21x21_tenda23.png',
-    '23x23_tenda25.png',
-    '23x23_tenda25(1).png',
-    '24x24_tenda24.png',
-    '26x26_tenda25.png',
-    '26X26_tenda25(1).png',
-    '26x26_tenda25(2).png',
-    '8x8_tenda1.png'
+// Lista de imagens do catálogo organizadas por tipo
+// Estrutura: { type, folder, filename, fullPath }
+const QUADRADAS_IMAGES = [
+    { type: 'QUADRADAS', folder: 'TENDA 1', filename: '10x10_tenda1.png' },
+    { type: 'QUADRADAS', folder: 'TENDA 2', filename: '10x10_ tenda2.png' },
+    { type: 'QUADRADAS', folder: 'TENDA 2', filename: '10x10_tenda2.png' },
+    { type: 'QUADRADAS', folder: 'TENDA 2', filename: '10x10_tenda2(1).png' },
+    { type: 'QUADRADAS', folder: 'TENDA 2', filename: '10x10_tenda2(2).png' },
+    { type: 'QUADRADAS', folder: 'TENDA 3', filename: '10x10_tenda3.png' },
+    { type: 'QUADRADAS', folder: 'TENDA 3', filename: '10x10_tenda3(1).png' },
+    { type: 'QUADRADAS', folder: 'TENDA 4', filename: '20x20_tenda4.png' },
+    { type: 'QUADRADAS', folder: 'TENDA 4', filename: '20X20_tenda4(1).png' },
+    { type: 'QUADRADAS', folder: 'TENDA 4', filename: '20x20_tenda4(2).png' },
+    { type: 'QUADRADAS', folder: 'TENDA 4', filename: '20x20_tenda4(3).png' },
+    { type: 'QUADRADAS', folder: 'TENDA 4', filename: '20x20_tenda4(4).png' }
+];
+
+const RETANGULAR_IMAGES = [
+    { type: 'RETANGULAR', folder: 'TENDA 1', filename: '10x12_tenda1.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 1', filename: '10x12_tenda1(1).png' },
+    { type: 'RETANGULAR', folder: 'TENDA 2', filename: '6x11_tenda2.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 3', filename: '11x14_tenda3.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 4', filename: '15X20_tenda4.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 5', filename: '12x20_tenda5.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 6', filename: '4x20_tenda6.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 6', filename: '4x20_tenda6(1).png' },
+    { type: 'RETANGULAR', folder: 'TENDA 6', filename: '4x20_tenda6(2).png' },
+    { type: 'RETANGULAR', folder: 'TENDA 6', filename: '4X20_tenda6(3).png' },
+    { type: 'RETANGULAR', folder: 'TENDA 7', filename: '10x30_tenda7.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 8', filename: '10x30_tenda8.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 9', filename: '7x25_tenda9.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 9', filename: '7X25_tenda9(1).png' },
+    { type: 'RETANGULAR', folder: 'TENDA 10', filename: '8x25_tenda10.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 10', filename: '8x25_tenda10(1).png' },
+    { type: 'RETANGULAR', folder: 'TENDA 10', filename: '8X25_tenda10(2).png' },
+    { type: 'RETANGULAR', folder: 'TENDA 11', filename: '8X25_tenda11.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 11', filename: '8x25_tenda11(1).png' },
+    { type: 'RETANGULAR', folder: 'TENDA 12', filename: '12x30_tenda12.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 13', filename: '12x50_tenda13.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 14', filename: '15x50_tenda14.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 15', filename: '20x40_tenda15.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 15', filename: '20x40_tenda15(1).png' },
+    { type: 'RETANGULAR', folder: 'TENDA 15', filename: '20x40_tenda15(2).png' },
+    { type: 'RETANGULAR', folder: 'TENDA 16', filename: '20X40_tenda16.png' },
+    { type: 'RETANGULAR', folder: 'TENDA 16', filename: '20x40_tenda16(1).png' }
+];
+
+const MANDALA_IMAGES = [
+    { type: 'MANDALA', folder: 'TENDA 1', filename: '8x8_tenda1.png' },
+    { type: 'MANDALA', folder: 'TENDA 1', filename: '8x8_tenda1(1).png' },
+    { type: 'MANDALA', folder: 'TENDA 1', filename: '8x8_tenda1(2).png' },
+    { type: 'MANDALA', folder: 'TENDA 1', filename: '8x8_tenda1(3).png' },
+    { type: 'MANDALA', folder: 'TENDA 1', filename: '8x8_tenda1(4).png' },
+    { type: 'MANDALA', folder: 'TENDA 2', filename: '11x11_tenda2.png' },
+    { type: 'MANDALA', folder: 'TENDA 2', filename: '11x11_tenda2(1).png' },
+    { type: 'MANDALA', folder: 'TENDA 2', filename: '11x11_tenda2(2).png' },
+    { type: 'MANDALA', folder: 'TENDA 2', filename: '11x11_tenda2(3).png' },
+    { type: 'MANDALA', folder: 'TENDA 2', filename: '11x11_tenda2(4).png' },
+    { type: 'MANDALA', folder: 'TENDA 3', filename: '13x13_tenda3.png' },
+    { type: 'MANDALA', folder: 'TENDA 3', filename: '13x13_tenda3(1).png' },
+    { type: 'MANDALA', folder: 'TENDA 3', filename: '13x13_tenda3(2).png' },
+    { type: 'MANDALA', folder: 'TENDA 3', filename: '13x13_tenda3(3).png' },
+    { type: 'MANDALA', folder: 'TENDA 3', filename: '13x13_tenda3(4).png' },
+    { type: 'MANDALA', folder: 'TENDA 4', filename: '11x11_tenda4.png' },
+    { type: 'MANDALA', folder: 'TENDA 5', filename: '14x14_tenda5.png' },
+    { type: 'MANDALA', folder: 'TENDA 5', filename: '14x14_tenda5(1).png' },
+    { type: 'MANDALA', folder: 'TENDA 5', filename: '14x14_tenda5(2).png' },
+    { type: 'MANDALA', folder: 'TENDA 6', filename: '14x14_tenda6.png' },
+    { type: 'MANDALA', folder: 'TENDA 7', filename: '21x21_tenda7.png' },
+    { type: 'MANDALA', folder: 'TENDA 8', filename: '23x23_tenda8.png' },
+    { type: 'MANDALA', folder: 'TENDA 8', filename: '23x23_tenda8(1).png' },
+    { type: 'MANDALA', folder: 'TENDA 9', filename: '24x24_tenda9.png' },
+    { type: 'MANDALA', folder: 'TENDA 10', filename: '26x26_tenda10.png' },
+    { type: 'MANDALA', folder: 'TENDA 10', filename: '26x26_tenda10(1).png' },
+    { type: 'MANDALA', folder: 'TENDA 10', filename: '26X26_tenda10(2).png' },
+    { type: 'MANDALA', folder: 'TENDA 10', filename: '26x26_tenda10(3).png' }
+];
+
+// Combinar todas as imagens e gerar fullPath
+const ALL_TENT_IMAGES = [
+    ...QUADRADAS_IMAGES.map(img => ({
+        ...img,
+        fullPath: `assets/images/CATÁLOGO/${img.type}/${img.folder}/${img.filename}`
+    })),
+    ...RETANGULAR_IMAGES.map(img => ({
+        ...img,
+        fullPath: `assets/images/CATÁLOGO/${img.type}/${img.folder}/${img.filename}`
+    })),
+    ...MANDALA_IMAGES.map(img => ({
+        ...img,
+        fullPath: `assets/images/CATÁLOGO/${img.type}/${img.folder}/${img.filename}`
+    }))
 ];
 
 // Função para processar e agrupar imagens do catálogo
 function buildTentCatalog() {
     const catalogMap = new Map();
     
-    TENT_IMAGES.forEach(filename => {
-        const parsed = parseTentDimensions(filename);
+    ALL_TENT_IMAGES.forEach(imageData => {
+        const parsed = parseTentDimensions(imageData);
         if (!parsed) {
-            console.warn(`Não foi possível processar: ${filename}`);
+            console.warn(`Não foi possível processar: ${imageData.filename || imageData}`);
             return;
         }
         
         const baseId = parsed.baseId;
-        const imagePath = `assets/images/catalogo/${filename}`;
+        const imagePath = imageData.fullPath || `assets/images/catalogo/${imageData.filename || imageData}`;
         
         if (!catalogMap.has(baseId)) {
             // Primeira imagem deste baseId - será a principal
@@ -152,6 +229,9 @@ function buildTentCatalog() {
                 width: parsed.width,
                 height: parsed.height,
                 tendaCode: parsed.tendaCode,
+                tendaNumber: parsed.tendaNumber,
+                type: parsed.type,
+                canCalculatePrice: parsed.type !== 'MANDALA',
                 mainImage: parsed.variation === null ? imagePath : null,
                 variations: [],
                 allImages: []
@@ -162,7 +242,7 @@ function buildTentCatalog() {
         
         // Adicionar imagem à lista de todas as imagens
         catalogItem.allImages.push({
-            filename: filename,
+            filename: imageData.filename || imageData,
             image: imagePath,
             variation: parsed.variation
         });
@@ -175,7 +255,7 @@ function buildTentCatalog() {
             catalogItem.variations.push({
                 variation: parsed.variation,
                 image: imagePath,
-                filename: filename
+                filename: imageData.filename || imageData
             });
             // Ordenar variações
             catalogItem.variations.sort((a, b) => a.variation - b.variation);
@@ -183,7 +263,7 @@ function buildTentCatalog() {
     });
     
     // Converter Map para Array e garantir que todas tenham mainImage
-    const catalog = Array.from(catalogMap.values()).map(item => {
+    let catalog = Array.from(catalogMap.values()).map(item => {
         // Se não tem mainImage definida, usar a primeira imagem sem variação ou a primeira variação
         if (!item.mainImage) {
             const firstImage = item.allImages.find(img => img.variation === null) || item.allImages[0];
@@ -192,6 +272,21 @@ function buildTentCatalog() {
             }
         }
         return item;
+    });
+    
+    // Ordenar: primeiro por type (QUADRADAS, RETANGULAR, MANDALA), depois por tendaNumber
+    const typeOrder = { 'QUADRADAS': 1, 'RETANGULAR': 2, 'MANDALA': 3 };
+    catalog.sort((a, b) => {
+        // Ordenar por tipo primeiro
+        const typeA = typeOrder[a.type] || 999;
+        const typeB = typeOrder[b.type] || 999;
+        if (typeA !== typeB) {
+            return typeA - typeB;
+        }
+        // Se mesmo tipo, ordenar por tendaNumber
+        const numA = a.tendaNumber || 0;
+        const numB = b.tendaNumber || 0;
+        return numA - numB;
     });
     
     return catalog;
@@ -239,15 +334,104 @@ document.addEventListener('DOMContentLoaded', function() {
 // Máscaras para Campos do Carrinho
 // ============================================
 
+// Função para buscar CEP na API ViaCEP
+function buscarCEP(cep) {
+    // Remove formatação do CEP
+    const cepLimpo = cep.replace(/\D/g, '');
+    
+    // Verifica se tem 8 dígitos
+    if (cepLimpo.length !== 8) {
+        return;
+    }
+    
+    const addressInput = document.getElementById('client-address');
+    if (!addressInput) return;
+    
+    // Mostrar indicador de carregamento
+    addressInput.placeholder = 'Buscando endereço...';
+    addressInput.disabled = true;
+    addressInput.style.opacity = '0.6';
+    
+    // Fazer requisição à API ViaCEP
+    fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`)
+        .then(response => response.json())
+        .then(data => {
+            addressInput.disabled = false;
+            addressInput.style.opacity = '1';
+            
+            // Verificar se houve erro
+            if (data.erro) {
+                addressInput.placeholder = 'CEP não encontrado. Digite o endereço manualmente.';
+                addressInput.value = '';
+                return;
+            }
+            
+            // Montar endereço completo
+            const enderecoCompleto = [];
+            
+            if (data.logradouro) {
+                enderecoCompleto.push(data.logradouro);
+            }
+            if (data.bairro) {
+                enderecoCompleto.push(data.bairro);
+            }
+            if (data.localidade) {
+                enderecoCompleto.push(data.localidade);
+            }
+            if (data.uf) {
+                enderecoCompleto.push(data.uf);
+            }
+            
+            // Pré-preencher o campo de endereço
+            if (enderecoCompleto.length > 0) {
+                addressInput.value = enderecoCompleto.join(', ');
+                addressInput.placeholder = 'Rua, número, complemento, bairro, cidade, estado';
+                
+                // Focar no campo de endereço para o usuário adicionar número e complemento
+                setTimeout(() => {
+                    addressInput.focus();
+                    // Posicionar cursor no início para facilitar adicionar número
+                    addressInput.setSelectionRange(0, 0);
+                }, 100);
+            } else {
+                addressInput.placeholder = 'CEP não encontrado. Digite o endereço manualmente.';
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao buscar CEP:', error);
+            addressInput.disabled = false;
+            addressInput.style.opacity = '1';
+            addressInput.placeholder = 'Erro ao buscar CEP. Digite o endereço manualmente.';
+        });
+}
+
 function setupCartFormMasks() {
     // Máscara para CEP
     const cepInput = document.getElementById('client-cep');
     if (cepInput) {
+        let lastCepValue = '';
+        
         cepInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             if (value.length <= 8) {
                 value = value.replace(/^(\d{5})(\d)/, '$1-$2');
                 e.target.value = value;
+                
+                // Buscar CEP quando tiver 8 dígitos completos
+                const cepLimpo = value.replace(/\D/g, '');
+                if (cepLimpo.length === 8 && cepLimpo !== lastCepValue) {
+                    lastCepValue = cepLimpo;
+                    buscarCEP(cepLimpo);
+                }
+            }
+        });
+        
+        // Também buscar quando o campo perder o foco (caso o usuário cole o CEP)
+        cepInput.addEventListener('blur', function(e) {
+            const cepLimpo = e.target.value.replace(/\D/g, '');
+            if (cepLimpo.length === 8 && cepLimpo !== lastCepValue) {
+                lastCepValue = cepLimpo;
+                buscarCEP(cepLimpo);
             }
         });
     }
@@ -590,11 +774,12 @@ function initCart() {
                 const area = calculateArea(height, width);
                 const price = area * PRICE_PER_SQUARE_METER;
                 
-                // Criar nome com dimensões
-                const tentName = `Tenda ${width}m × ${height}m`;
+                // Criar nome com dimensões e área
+                const tentName = `Tenda ${width}m × ${height}m (${area.toFixed(0)}m²)`;
                 
-                // Buscar tendaCode e variação do catálogo se houver ID na URL
+                // Buscar tendaCode, tipo e variação do catálogo se houver ID na URL
                 let tendaCode = null;
+                let tentType = null;
                 let variation = null;
                 let currentImagePath = productImage; // Usar imagem padrão do botão
                 
@@ -605,6 +790,9 @@ function initCart() {
                     if (tent) {
                         if (tent.tendaCode) {
                             tendaCode = tent.tendaCode;
+                        }
+                        if (tent.type) {
+                            tentType = tent.type;
                         }
                         // Capturar imagem e variação atual do carrossel (se disponível)
                         if (typeof window.currentCarouselIndex !== 'undefined' && typeof window.carouselImages !== 'undefined' && window.carouselImages.length > 0) {
@@ -633,6 +821,7 @@ function initCart() {
                     price: price,
                     isTent: true,
                     tendaCode: tendaCode,
+                    type: tentType,
                     variation: variation
                 });
                 
@@ -706,11 +895,16 @@ function addToCart(product) {
         newItem.width = product.width;
         newItem.area = product.area;
         newItem.price = product.price;
-        // Atualizar nome para incluir dimensões
-        newItem.name = `Tenda ${product.width}m × ${product.height}m`;
+        // Atualizar nome para incluir dimensões e área
+        const area = product.width * product.height;
+        newItem.name = `Tenda ${product.width}m × ${product.height}m (${area.toFixed(0)}m²)`;
         // Adicionar código da tenda se disponível
         if (product.tendaCode) {
             newItem.tendaCode = product.tendaCode;
+        }
+        // Adicionar tipo da tenda se disponível
+        if (product.type) {
+            newItem.type = product.type;
         }
         // Adicionar variação se disponível
         if (product.variation !== null && product.variation !== undefined) {
@@ -1059,7 +1253,8 @@ function generateWhatsAppMessage(clientData) {
             message += `Dimensões: ${item.height}m × ${item.width}m\n`;
             message += `Área: ${item.area.toFixed(2)}m²\n`;
             if (item.tendaCode) {
-                message += `Código: ${item.tendaCode}\n`;
+                const typeText = item.type ? ` (${item.type})` : '';
+                message += `Código: ${item.tendaCode}${typeText}\n`;
             }
             if (item.variation !== null && item.variation !== undefined) {
                 message += `Variação: ${item.variation}\n`;
@@ -1242,15 +1437,26 @@ window.calculateTentPrice = function(productId) {
 // Função para criar card de produto
 function createProductCard(tent) {
     const image = tent.mainImage || (tent.allImages && tent.allImages[0] ? tent.allImages[0].image : '');
+    const canCalculate = tent.canCalculatePrice !== false; // Default true se não especificado
+    
+    // Título diferente para MANDALA
+    let title;
+    if (canCalculate) {
+        title = `Tenda ${tent.width}m × ${tent.height}m (${(tent.width * tent.height).toFixed(0)}m²)`;
+    } else {
+        title = `Tenda ${tent.width}m × ${tent.height}m`;
+    }
+    
     return `
         <article class="product-card">
             <div class="product-image">
                 <img src="${image}" alt="Tenda ${tent.width}m x ${tent.height}m" loading="lazy">
             </div>
             <div class="product-content">
-                <h3 class="product-title">Tenda ${tent.width}m × ${tent.height}m</h3>
+                <h3 class="product-title">${title}</h3>
+                ${!canCalculate ? '<p class="product-price-note" style="color: var(--color-accent-primary); font-size: 0.9rem; margin-top: 0.5rem;">Sob consulta</p>' : ''}
                 <div class="product-actions">
-                    <a href="tenda.html?w=${tent.width}&h=${tent.height}&id=${tent.baseId}" class="btn-secondary">Fazer orçamento completo</a>
+                    <a href="tenda.html?w=${tent.width}&h=${tent.height}&id=${tent.baseId}" class="btn-secondary">Fazer orçamento </a>
                 </div>
             </div>
         </article>
@@ -1265,10 +1471,42 @@ function renderProductCatalog() {
     // Limpar grid
     catalogGrid.innerHTML = '';
     
-    // Criar cards para cada tenda
+    // Agrupar tendas por tipo
+    const tentsByType = {
+        'QUADRADAS': [],
+        'RETANGULAR': [],
+        'MANDALA': []
+    };
+    
     TENT_CATALOG.forEach(tent => {
-        const cardHTML = createProductCard(tent);
-        catalogGrid.insertAdjacentHTML('beforeend', cardHTML);
+        if (tent.type && tentsByType[tent.type]) {
+            tentsByType[tent.type].push(tent);
+        }
+    });
+    
+    // Nomes das seções
+    const sectionNames = {
+        'QUADRADAS': 'Tendas Quadradas',
+        'RETANGULAR': 'Tendas Retangulares',
+        'MANDALA': 'Tendas Mandala'
+    };
+    
+    // Renderizar cada seção
+    Object.keys(tentsByType).forEach(type => {
+        const tents = tentsByType[type];
+        if (tents.length === 0) return;
+        
+        // Criar container da seção
+        const sectionHTML = `
+            <div class="catalog-section" data-type="${type}">
+                <h3 class="catalog-section-title">${sectionNames[type]}</h3>
+                <div class="catalog-section-grid">
+                    ${tents.map(tent => createProductCard(tent)).join('')}
+                </div>
+            </div>
+        `;
+        
+        catalogGrid.insertAdjacentHTML('beforeend', sectionHTML);
     });
     
     // Adicionar animações aos novos cards
