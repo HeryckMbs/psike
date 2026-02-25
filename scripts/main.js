@@ -1000,12 +1000,12 @@ function createCartItemElement(item) {
                 </button>
             </div>
             <div class="cart-item-observations">
-                <label for="${observationsId}" class="cart-item-observations-label">Observações deste produto:</label>
+                <label for="${observationsId}" class="cart-item-observations-label">Personalizações desejadas para este pedido:</label>
                 <textarea 
                     id="${observationsId}" 
                     class="cart-item-observations-field" 
                     placeholder="Cores desejadas, medidas personalizadas ou outras especificações..."
-                    rows="2"
+                    rows="4"
                     oninput="updateItemObservations('${escapedItemId}', this.value)"
                 >${escapedObservations}</textarea>
             </div>
@@ -1250,7 +1250,7 @@ function createProductCard(tent) {
             <div class="product-content">
                 <h3 class="product-title">Tenda ${tent.width}m × ${tent.height}m</h3>
                 <div class="product-actions">
-                    <a href="tenda.html?w=${tent.width}&h=${tent.height}&id=${tent.baseId}" class="btn-secondary">Comprar</a>
+                    <a href="tenda.html?w=${tent.width}&h=${tent.height}&id=${tent.baseId}" class="btn-secondary">Fazer orçamento completo</a>
                 </div>
             </div>
         </article>

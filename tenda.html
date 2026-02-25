@@ -83,7 +83,7 @@
                         </div>
                         
                         <p class="product-page-description">
-                            Malhas tensionadas sob medida, duráveis e ideais para eventos.                        </p>
+                            Malhas tensionadas sob medida, ideais para eventos e instalações fixas.                        </p>
                         <div class="dimensions-inputs-large">
                             <div class="dimension-input-group-large">
                                 <label for="tent-height-large" class="dimension-label-large">Altura (m)</label>
@@ -123,7 +123,7 @@
                         <h3 class="specs-title">Especificações</h3>
                         <ul class="specs-list">
                             <li>Envio para todo o Brasil</li>
-                            <li>Dimensões personalizadas</li>
+                            <li>Dimensões e cores personalizadas</li>
                             <li>Materiais de alta durabilidade</li>
                             <li>Acabamento profissional</li>
                         </ul>
@@ -131,7 +131,7 @@
                         <h3 class="shipping-title">FRETES E CONDIÇÕES</h3>
                         <ul class="shipping-list">
                             <li>Frete não incluso</li>
-                            <li>Valor do frete varia com o peso</li>
+                            <li>Valor do frete varia com o peso e modelo</li>
                             <li>Consulte valores e condições</li>
                             <li>Valores das tendas sujeitos a alteração</li>
                         </ul>
@@ -242,18 +242,22 @@
                 return;
             }
 
-            grid.innerHTML = relatedTents.map(tent => `
+            grid.innerHTML = relatedTents.map(tent => {
+                // Usar mainImage se disponível, senão usar a primeira imagem disponível
+                const imageSrc = tent.mainImage || (tent.allImages && tent.allImages.length > 0 ? tent.allImages[0].image : 'assets/images/catalogo/14x14.png');
+                return `
                 <article class="related-product-card">
-                    <a href="tenda.html?w=${tent.width}&h=${tent.height}&id=${tent.id}">
+                    <a href="tenda.html?w=${tent.width}&h=${tent.height}&id=${tent.baseId || tent.id}">
                         <div class="related-product-image">
-                            <img src="${tent.image}" alt="Tenda ${tent.width}m x ${tent.height}m" loading="lazy">
+                            <img src="${imageSrc}" alt="Tenda ${tent.width}m x ${tent.height}m" loading="lazy">
                         </div>
                         <div class="related-product-content">
                             <h3 class="related-product-title">Tenda ${tent.width}m × ${tent.height}m</h3>
                         </div>
                     </a>
                 </article>
-            `).join('');
+            `;
+            }).join('');
         }
 
         // Obter parâmetros da URL
