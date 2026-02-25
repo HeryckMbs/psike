@@ -2189,6 +2189,124 @@ section {
     }
 }
 
+/* Carrossel de imagens */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: var(--color-text-primary);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all var(--transition-fast);
+    opacity: 0.8;
+}
+
+.carousel-nav:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-nav:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-nav svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--color-text-primary);
+}
+
+.carousel-prev {
+    left: var(--spacing-sm);
+}
+
+.carousel-next {
+    right: var(--spacing-sm);
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: var(--spacing-sm);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--spacing-xs);
+    z-index: 10;
+}
+
+.carousel-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.carousel-indicator:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.2);
+}
+
+.carousel-indicator.active {
+    background-color: var(--color-accent-primary);
+    border-color: var(--color-accent-primary);
+    transform: scale(1.2);
+}
+
+/* Transição suave para mudança de imagem */
+.product-main-image img {
+    transition: opacity var(--transition-normal);
+}
+
+.product-main-image img.fade-out {
+    opacity: 0;
+}
+
+.product-main-image img.fade-in {
+    opacity: 1;
+}
+
+/* Responsividade do carrossel */
+@media (max-width: 768px) {
+    .carousel-nav {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .carousel-nav svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .carousel-prev {
+        left: var(--spacing-xs);
+    }
+    
+    .carousel-next {
+        right: var(--spacing-xs);
+    }
+    
+    .carousel-indicators {
+        bottom: var(--spacing-xs);
+    }
+    
+    .carousel-indicator {
+        width: 8px;
+        height: 8px;
+    }
+}
+
 .product-thumbnails {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

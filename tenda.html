@@ -59,8 +59,20 @@
                     <div class="product-gallery">
                         <div class="product-main-image">
                             <img src="assets/images/catalogo/14x14.png" alt="Tenda tensionada personalizada" id="mainProductImage">
+                            <!-- Setas de navegação do carrossel (apenas se houver variações) -->
+                            <button class="carousel-nav carousel-prev" id="carouselPrev" onclick="previousImage()" aria-label="Imagem anterior" style="display: none;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="15 18 9 12 15 6"></polyline>
+                                </svg>
+                            </button>
+                            <button class="carousel-nav carousel-next" id="carouselNext" onclick="nextImage()" aria-label="Próxima imagem" style="display: none;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </button>
+                            <!-- Indicadores do carrossel (apenas se houver variações) -->
+                            <div class="carousel-indicators" id="carouselIndicators" style="display: none;"></div>
                         </div>
-                      
                     </div>
 
                     <!-- Ações -->
@@ -322,19 +334,148 @@
             resultDiv.style.display = 'block';
         };
 
+        // Variáveis globais para o carrossel (tornar acessíveis globalmente)
+        window.carouselImages = [];
+        window.currentCarouselIndex = 0;
+        let carouselImages = window.carouselImages;
+        let currentCarouselIndex = window.currentCarouselIndex;
+
+        // Funções do carrossel
+        window.previousImage = function() {
+            if (carouselImages.length === 0) return;
+            currentCarouselIndex = (currentCarouselIndex - 1 + carouselImages.length) % carouselImages.length;
+            window.currentCarouselIndex = currentCarouselIndex;
+            goToImage(currentCarouselIndex);
+        };
+
+        window.nextImage = function() {
+            if (carouselImages.length === 0) return;
+            currentCarouselIndex = (currentCarouselIndex + 1) % carouselImages.length;
+            window.currentCarouselIndex = currentCarouselIndex;
+            goToImage(currentCarouselIndex);
+        };
+
+        window.goToImage = function(index) {
+            if (index < 0 || index >= carouselImages.length) return;
+            currentCarouselIndex = index;
+            window.currentCarouselIndex = index;
+            
+            const mainImage = document.getElementById('mainProductImage');
+            if (mainImage && carouselImages[index]) {
+                // Fade out
+                mainImage.classList.add('fade-out');
+                
+                setTimeout(() => {
+                    mainImage.src = carouselImages[index].image;
+                    mainImage.alt = carouselImages[index].alt || `Tenda - Variação ${index + 1}`;
+                    mainImage.classList.remove('fade-out');
+                    mainImage.classList.add('fade-in');
+                    
+                    // Re-detectar orientação
+                    detectImageOrientation();
+                    
+                    // Atualizar indicadores
+                    updateCarouselIndicators();
+                }, 150);
+            }
+        };
+
+        function updateCarouselIndicators() {
+            const indicatorsContainer = document.getElementById('carouselIndicators');
+            if (!indicatorsContainer) return;
+            
+            const indicators = indicatorsContainer.querySelectorAll('.carousel-indicator');
+            indicators.forEach((indicator, index) => {
+                if (index === currentCarouselIndex) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        function initializeCarousel(tent) {
+            // Montar array de imagens: principal + variações
+            carouselImages = [];
+            window.carouselImages = carouselImages;
+            
+            // Adicionar imagem principal
+            if (tent.mainImage) {
+                carouselImages.push({
+                    image: tent.mainImage,
+                    alt: `Tenda ${tent.width}m × ${tent.height}m`,
+                    isMain: true,
+                    variation: null
+                });
+            }
+            
+            // Adicionar variações
+            if (tent.variations && tent.variations.length > 0) {
+                tent.variations.forEach(variation => {
+                    carouselImages.push({
+                        image: variation.image,
+                        alt: `Tenda ${tent.width}m × ${tent.height}m - Variação ${variation.variation}`,
+                        isMain: false,
+                        variation: variation.variation
+                    });
+                });
+            }
+            
+            // Atualizar referência global
+            window.carouselImages = carouselImages;
+            
+            // Se houver mais de uma imagem, mostrar carrossel
+            if (carouselImages.length > 1) {
+                const prevButton = document.getElementById('carouselPrev');
+                const nextButton = document.getElementById('carouselNext');
+                const indicatorsContainer = document.getElementById('carouselIndicators');
+                
+                if (prevButton) prevButton.style.display = 'flex';
+                if (nextButton) nextButton.style.display = 'flex';
+                if (indicatorsContainer) {
+                    indicatorsContainer.style.display = 'flex';
+                    // Criar indicadores
+                    indicatorsContainer.innerHTML = '';
+                    carouselImages.forEach((_, index) => {
+                        const indicator = document.createElement('button');
+                        indicator.className = 'carousel-indicator' + (index === 0 ? ' active' : '');
+                        indicator.setAttribute('aria-label', `Ir para imagem ${index + 1}`);
+                        indicator.onclick = () => goToImage(index);
+                        indicatorsContainer.appendChild(indicator);
+                    });
+                }
+            } else {
+                // Ocultar controles do carrossel
+                const prevButton = document.getElementById('carouselPrev');
+                const nextButton = document.getElementById('carouselNext');
+                const indicatorsContainer = document.getElementById('carouselIndicators');
+                
+                if (prevButton) prevButton.style.display = 'none';
+                if (nextButton) nextButton.style.display = 'none';
+                if (indicatorsContainer) indicatorsContainer.style.display = 'none';
+            }
+            
+            // Resetar índice
+            currentCarouselIndex = 0;
+            window.currentCarouselIndex = 0;
+        }
+
         // Preencher campos com valores da URL
         function fillDimensionsFromURL() {
             const params = getURLParams();
             
-            // Buscar tenda do catálogo se tiver ID (prioridade)
+            // Buscar tenda do catálogo se tiver ID (prioridade) - usar baseId
             if (params.id && typeof TENT_CATALOG !== 'undefined') {
-                const tent = TENT_CATALOG.find(t => t.id === params.id);
+                const tent = TENT_CATALOG.find(t => t.baseId === params.id);
                 if (tent) {
+                    // Inicializar carrossel
+                    initializeCarousel(tent);
+                    
                     // Atualizar imagem principal
                     const mainImage = document.getElementById('mainProductImage');
-                    if (mainImage) {
-                        mainImage.src = tent.image;
-                        mainImage.alt = `Tenda ${tent.width}m x ${tent.height}m`;
+                    if (mainImage && carouselImages.length > 0) {
+                        mainImage.src = carouselImages[0].image;
+                        mainImage.alt = carouselImages[0].alt;
                         // Re-detectar orientação quando a imagem carregar
                         if (mainImage.complete) {
                             detectImageOrientation();
@@ -372,8 +513,8 @@
                     
                     // Atualizar imagem do botão de adicionar ao carrinho
                     const addButton = document.getElementById('btn-add-tent-large');
-                    if (addButton) {
-                        addButton.setAttribute('data-product-image', tent.image);
+                    if (addButton && carouselImages.length > 0) {
+                        addButton.setAttribute('data-product-image', carouselImages[0].image);
                     }
                     
                     // Gerar thumbnails
@@ -488,6 +629,22 @@
                 console.log('Aplicando classe: image-landscape (quase quadrado)');
             }
         }
+
+        // Navegação por teclado para o carrossel
+        document.addEventListener('keydown', function(e) {
+            // Só funcionar se houver imagens no carrossel e não estiver digitando em um input
+            if (carouselImages.length > 1 && 
+                e.target.tagName !== 'INPUT' && 
+                e.target.tagName !== 'TEXTAREA') {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    previousImage();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    nextImage();
+                }
+            }
+        });
 
         // Inicializar
         document.addEventListener('DOMContentLoaded', function() {

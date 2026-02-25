@@ -13,11 +13,38 @@ const PRICE_PER_SQUARE_METER = 22.00; // R$ 22,00 por m²
 // Catálogo de Tendas
 // ============================================
 
-// Função para extrair medidas do nome do arquivo
+// Função para extrair medidas e código da tenda do nome do arquivo
 function parseTentDimensions(filename) {
     // Remove extensão .png
     let name = filename.replace(/\.png$/i, '');
     
+    // Remove espaços extras no início e fim
+    name = name.trim();
+    
+    // Padrão para formato: WxH_tendaXX ou WxH_tendaXX(N) ou WxH tendaXX ou WxH_tendasXX
+    // Exemplos: 4x20_tenda8.png, 4x20_tenda8(1).png, 10x10_tenda3(2).png, 10x10_ tenda3.png, 14x14_tendas22.png
+    const pattern1 = /(\d+)[xX](\d+)[_\s]+tendas?(\d+)(?:\((\d+)\))?/i;
+    const match1 = name.match(pattern1);
+    
+    if (match1) {
+        const width = parseInt(match1[1]);
+        const height = parseInt(match1[2]);
+        const tendaCode = `tenda${match1[3]}`;
+        const variation = match1[4] ? parseInt(match1[4]) : null;
+        const baseId = `tenda-${width}x${height}-${tendaCode}`;
+        const id = variation ? `${baseId}-${variation}` : baseId;
+        
+        return {
+            width: width,
+            height: height,
+            tendaCode: tendaCode,
+            variation: variation,
+            baseId: baseId,
+            id: id
+        };
+    }
+    
+    // Padrão alternativo para formato antigo: WxH ou WxH - N
     // Remove palavras como "TENDA", "NOVO" e espaços extras
     name = name.replace(/TENDA\s*/gi, '').replace(/NOVO\s*/gi, '').trim();
     
@@ -25,41 +52,153 @@ function parseTentDimensions(filename) {
     name = name.replace(/\s*-\s*/, '-');
     
     // Extrai números: formato pode ser "14x14", "15X20", "8X25-2", etc
-    const match = name.match(/(\d+)[xX](\d+)(?:-(\d+))?/);
+    const match2 = name.match(/(\d+)[xX](\d+)(?:-(\d+))?/);
     
-    if (match) {
-        const width = parseInt(match[1]);
-        const height = parseInt(match[2]);
-        const variation = match[3] ? parseInt(match[3]) : null;
+    if (match2) {
+        const width = parseInt(match2[1]);
+        const height = parseInt(match2[2]);
+        const variation = match2[3] ? parseInt(match2[3]) : null;
+        const baseId = `tenda-${width}x${height}`;
+        const id = variation ? `${baseId}-${variation}` : baseId;
         
         return {
             width: width,
             height: height,
+            tendaCode: null, // Sem código da tenda no formato antigo
             variation: variation,
-            id: variation ? `tenda-${width}x${height}-${variation}` : `tenda-${width}x${height}`
+            baseId: baseId,
+            id: id
         };
     }
     
     return null;
 }
 
-// Catálogo completo de tendas
-const TENT_CATALOG = [
-    { filename: '10x10.png', image: 'assets/images/catalogo/10x10.png', width: 10, height: 10, id: 'tenda-10x10' },
-    { filename: '10x30 NOVO.png', image: 'assets/images/catalogo/10x30 NOVO.png', width: 10, height: 30, id: 'tenda-10x30' },
-    { filename: '12x20.png', image: 'assets/images/catalogo/12x20.png', width: 12, height: 20, id: 'tenda-12x20' },
-    { filename: '14x14.png', image: 'assets/images/catalogo/14x14.png', width: 14, height: 14, id: 'tenda-14x14' },
-    { filename: '15X20.png', image: 'assets/images/catalogo/15X20.png', width: 15, height: 20, id: 'tenda-15x20' },
-    { filename: '20X20.png', image: 'assets/images/catalogo/20X20.png', width: 20, height: 20, id: 'tenda-20x20' },
-    { filename: '20X40.png', image: 'assets/images/catalogo/20X40.png', width: 20, height: 40, id: 'tenda-20x40' },
-    { filename: '23x23.png', image: 'assets/images/catalogo/23x23.png', width: 23, height: 23, id: 'tenda-23x23' },
-    { filename: '26X26.png', image: 'assets/images/catalogo/26X26.png', width: 26, height: 26, id: 'tenda-26x26' },
-    { filename: '40X20.png', image: 'assets/images/catalogo/40X20.png', width: 40, height: 20, id: 'tenda-40x20' },
-    { filename: '7X25.png', image: 'assets/images/catalogo/7X25.png', width: 7, height: 25, id: 'tenda-7x25' },
-    { filename: '8X25.png', image: 'assets/images/catalogo/8X25.png', width: 8, height: 25, id: 'tenda-8x25' },
-    { filename: '8X25 - 2.png', image: 'assets/images/catalogo/8X25 - 2.png', width: 8, height: 25, id: 'tenda-8x25-2' },
-    { filename: 'TENDA 4X20.png', image: 'assets/images/catalogo/TENDA 4X20.png', width: 4, height: 20, id: 'tenda-4x20' }
+// Lista de todas as imagens do catálogo
+const TENT_IMAGES = [
+    '4x20_tenda8.png',
+    '4X20_tenda8(1).png',
+    '4x20_tenda8(2).png',
+    '4x20_tenda8(3).png',
+    '6x11_tenda12.png',
+    '7x25_tenda11.png',
+    '7X25_tenda11(1).png',
+    '8X25_tenda9.png',
+    '8x25_tenda9(1).png',
+    '8x25_tenda10.png',
+    '8X25_tenda10(1).png',
+    '8x25_tenda10(2).png',
+    '10x10_ tenda3.png',
+    '10x10_tenda2.png',
+    '10x10_tenda3.png',
+    '10x10_tenda3(1).png',
+    '10x10_tenda3(2).png',
+    '10x10_tenda4.png',
+    '10x10_tenda4(1).png',
+    '10x12_tenda5.png',
+    '10x12_tenda5(1).png',
+    '10x30_tenda14.png',
+    '10x30_tenda16.png',
+    '11x11_tenda1.png',
+    '11x11_tenda21.png',
+    '11x14_tenda7.png',
+    '12x20_tenda15.png',
+    '12x30_tenda16.png',
+    '12x50_tenda13.png',
+    '13x13_tenda1.png',
+    '14x14_tenda22.png',
+    '14x14_tenda22(1).png',
+    '14x14_tenda23.png',
+    '14x14_tendas22.png',
+    '15X20_tenda18.png',
+    '15x50_tenda17.png',
+    '20x20_tenda6.png',
+    '20X20_tenda6(1).png',
+    '20x20_tenda6(2).png',
+    '20x20_tenda6(3).png',
+    '20x20_tenda6(4).png',
+    '20x40_tenda19.png',
+    '20X40_tenda20.png',
+    '20x40_tenda20(1).png',
+    '21x21_tenda23.png',
+    '23x23_tenda25.png',
+    '23x23_tenda25(1).png',
+    '24x24_tenda24.png',
+    '26x26_tenda25.png',
+    '26X26_tenda25(1).png',
+    '26x26_tenda25(2).png',
+    '8x8_tenda1.png'
 ];
+
+// Função para processar e agrupar imagens do catálogo
+function buildTentCatalog() {
+    const catalogMap = new Map();
+    
+    TENT_IMAGES.forEach(filename => {
+        const parsed = parseTentDimensions(filename);
+        if (!parsed) {
+            console.warn(`Não foi possível processar: ${filename}`);
+            return;
+        }
+        
+        const baseId = parsed.baseId;
+        const imagePath = `assets/images/catalogo/${filename}`;
+        
+        if (!catalogMap.has(baseId)) {
+            // Primeira imagem deste baseId - será a principal
+            catalogMap.set(baseId, {
+                baseId: baseId,
+                id: baseId,
+                width: parsed.width,
+                height: parsed.height,
+                tendaCode: parsed.tendaCode,
+                mainImage: parsed.variation === null ? imagePath : null,
+                variations: [],
+                allImages: []
+            });
+        }
+        
+        const catalogItem = catalogMap.get(baseId);
+        
+        // Adicionar imagem à lista de todas as imagens
+        catalogItem.allImages.push({
+            filename: filename,
+            image: imagePath,
+            variation: parsed.variation
+        });
+        
+        // Se não tem variação, é a imagem principal
+        if (parsed.variation === null) {
+            catalogItem.mainImage = imagePath;
+        } else {
+            // É uma variação
+            catalogItem.variations.push({
+                variation: parsed.variation,
+                image: imagePath,
+                filename: filename
+            });
+            // Ordenar variações
+            catalogItem.variations.sort((a, b) => a.variation - b.variation);
+        }
+    });
+    
+    // Converter Map para Array e garantir que todas tenham mainImage
+    const catalog = Array.from(catalogMap.values()).map(item => {
+        // Se não tem mainImage definida, usar a primeira imagem sem variação ou a primeira variação
+        if (!item.mainImage) {
+            const firstImage = item.allImages.find(img => img.variation === null) || item.allImages[0];
+            if (firstImage) {
+                item.mainImage = firstImage.image;
+            }
+        }
+        return item;
+    });
+    
+    return catalog;
+}
+
+// Catálogo completo de tendas (agrupado por baseId)
+const TENT_CATALOG = buildTentCatalog();
 
 // ============================================
 // Scroll Suave
@@ -454,16 +593,47 @@ function initCart() {
                 // Criar nome com dimensões
                 const tentName = `Tenda ${width}m × ${height}m`;
                 
+                // Buscar tendaCode e variação do catálogo se houver ID na URL
+                let tendaCode = null;
+                let variation = null;
+                let currentImagePath = productImage; // Usar imagem padrão do botão
+                
+                const urlParams = new URLSearchParams(window.location.search);
+                const tentId = urlParams.get('id');
+                if (tentId && typeof TENT_CATALOG !== 'undefined') {
+                    const tent = TENT_CATALOG.find(t => t.baseId === tentId);
+                    if (tent) {
+                        if (tent.tendaCode) {
+                            tendaCode = tent.tendaCode;
+                        }
+                        // Capturar imagem e variação atual do carrossel (se disponível)
+                        if (typeof window.currentCarouselIndex !== 'undefined' && typeof window.carouselImages !== 'undefined' && window.carouselImages.length > 0) {
+                            const currentIndex = window.currentCarouselIndex;
+                            const currentImage = window.carouselImages[currentIndex];
+                            // Usar a imagem atual do carrossel
+                            if (currentImage && currentImage.image) {
+                                currentImagePath = currentImage.image;
+                            }
+                            // Se a imagem atual tem uma variação definida, usar ela
+                            if (currentImage && currentImage.variation !== null && currentImage.variation !== undefined) {
+                                variation = currentImage.variation;
+                            }
+                        }
+                    }
+                }
+                
                 addToCart({
                     id: productId,
                     name: tentName,
-                    image: productImage,
+                    image: currentImagePath, // Usar imagem atual do carrossel
                     specs: productSpecs,
                     height: height,
                     width: width,
                     area: area,
                     price: price,
-                    isTent: true
+                    isTent: true,
+                    tendaCode: tendaCode,
+                    variation: variation
                 });
                 
                 // Redirecionar para carrinho após adicionar
@@ -530,7 +700,7 @@ function addToCart(product) {
         isTent: product.isTent || false
     };
     
-    // Se for tenda, adicionar dimensões
+    // Se for tenda, adicionar dimensões, código e variação
     if (product.isTent && product.height && product.width) {
         newItem.height = product.height;
         newItem.width = product.width;
@@ -538,6 +708,14 @@ function addToCart(product) {
         newItem.price = product.price;
         // Atualizar nome para incluir dimensões
         newItem.name = `Tenda ${product.width}m × ${product.height}m`;
+        // Adicionar código da tenda se disponível
+        if (product.tendaCode) {
+            newItem.tendaCode = product.tendaCode;
+        }
+        // Adicionar variação se disponível
+        if (product.variation !== null && product.variation !== undefined) {
+            newItem.variation = product.variation;
+        }
     }
     
     cart.push(newItem);
@@ -853,12 +1031,39 @@ function generateWhatsAppMessage(clientData) {
         message += `*${index + 1}. ${item.name}*\n`;
         message += `Qtd: ${item.quantity}x\n\n`;
         
-        // Se for tenda, adicionar dimensões e preço
+        // Adicionar imagem do produto (URL completa)
+        if (item.image) {
+            // Construir URL completa da imagem
+            let imageUrl = item.image;
+            
+            // Se não for URL absoluta, converter para absoluta
+            if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+                // Remover barra inicial se houver
+                if (imageUrl.startsWith('/')) {
+                    imageUrl = imageUrl.substring(1);
+                }
+                // Construir URL base (diretório raiz do site)
+                const baseUrl = window.location.origin;
+                // Se estiver em subdiretório, adicionar ao path
+                const pathParts = window.location.pathname.split('/').filter(p => p && !p.endsWith('.html'));
+                const basePath = pathParts.length > 0 ? '/' + pathParts.join('/') + '/' : '/';
+                imageUrl = baseUrl + basePath + imageUrl;
+            }
+            message += `*Imagem:*\n${imageUrl}\n\n`;
+        }
+        
+        // Se for tenda, adicionar dimensões, código, variação e preço
         if (item.isTent && item.height && item.width && item.area && item.price) {
             const itemTotal = item.price * item.quantity;
             totalPrice += itemTotal;
             message += `Dimensões: ${item.height}m × ${item.width}m\n`;
             message += `Área: ${item.area.toFixed(2)}m²\n`;
+            if (item.tendaCode) {
+                message += `Código: ${item.tendaCode}\n`;
+            }
+            if (item.variation !== null && item.variation !== undefined) {
+                message += `Variação: ${item.variation}\n`;
+            }
             message += `Preço unitário: R$ ${formatNumber(item.price)}\n`;
             message += `Preço total: R$ ${formatNumber(itemTotal)}\n\n`;
         }
@@ -1036,15 +1241,16 @@ window.calculateTentPrice = function(productId) {
 
 // Função para criar card de produto
 function createProductCard(tent) {
+    const image = tent.mainImage || (tent.allImages && tent.allImages[0] ? tent.allImages[0].image : '');
     return `
         <article class="product-card">
             <div class="product-image">
-                <img src="${tent.image}" alt="Tenda ${tent.width}m x ${tent.height}m" loading="lazy">
+                <img src="${image}" alt="Tenda ${tent.width}m x ${tent.height}m" loading="lazy">
             </div>
             <div class="product-content">
                 <h3 class="product-title">Tenda ${tent.width}m × ${tent.height}m</h3>
                 <div class="product-actions">
-                    <a href="tenda.html?w=${tent.width}&h=${tent.height}&id=${tent.id}" class="btn-secondary">Comprar</a>
+                    <a href="tenda.html?w=${tent.width}&h=${tent.height}&id=${tent.baseId}" class="btn-secondary">Comprar</a>
                 </div>
             </div>
         </article>
