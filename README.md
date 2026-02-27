@@ -1,199 +1,163 @@
-# Landing Page Psiké Deloun Arts
+# Psiké Deloun Arts - Sistema Completo
 
-Landing page moderna e responsiva desenvolvida para apresentar o catálogo de estruturas tensionadas e domos geodésicos da Psiké Deloun Arts. Design "Visionária Premium" com foco em conversão para WhatsApp.
+Sistema completo de gestão para Psiké Deloun Arts, incluindo frontend público, área administrativa, API REST e infraestrutura Docker.
 
-## 🎨 Características
-
-- **Design Dark Mode Premium**: Fundo grafite/ônix com acentos em verde neon
-- **Totalmente Responsivo**: Mobile-first, adaptável para todos os dispositivos
-- **Animações Suaves**: Scroll suave e animações de entrada com Intersection Observer
-- **Otimizado para Conversão**: CTAs claros e botão WhatsApp destacado
-- **Performance**: Código limpo e otimizado
-
-## 📁 Estrutura de Arquivos
+## Estrutura do Projeto
 
 ```
 psike/
-├── index.html              # Página principal
-├── styles/
-│   └── main.css           # Estilos principais
-├── scripts/
-│   └── main.js            # JavaScript (scroll, animações, WhatsApp)
-├── assets/
-│   └── images/
-│       └── logo.png       # Logo da empresa
-└── README.md              # Este arquivo
+├── frontend/          # Vue.js 3 (público)
+├── admin/             # Vue.js 3 + Vuetify (administrativo)
+├── backend/           # Laravel 11 (API REST)
+├── docker/            # Configurações Docker
+└── docker-compose.yml # Orquestração Docker
 ```
 
-## 🚀 Como Usar
+## Tecnologias
 
-### 1. Personalizar Número do WhatsApp
+- **Frontend Público**: Vue.js 3, Vite, Vue Router, Pinia
+- **Frontend Admin**: Vue.js 3, Vuetify 3
+- **Backend**: Laravel 11, PostgreSQL, Laravel Passport
+- **Infraestrutura**: Docker, Docker Compose, Nginx
+- **Outros**: DomPDF, Spatie Laravel Permission
 
-Abra o arquivo `scripts/main.js` e altere a constante no topo do arquivo:
+## Instalação
 
-```javascript
-const WHATSAPP_NUMBER = '5511999999999'; // Seu número aqui
-const WHATSAPP_MESSAGE = 'Olá! Gostaria de saber mais sobre as estruturas da Psiké Deloun Arts.';
-```
+### Pré-requisitos
 
-**Formato do número**: 
-- Use apenas dígitos
-- Inclua o código do país (55 para Brasil)
-- Exemplo: `5511999999999` (11 99999-9999)
+- Docker e Docker Compose instalados
+- Git
 
-### 2. Substituir Imagens
+### Passos
 
-As imagens atualmente usam placeholders do Unsplash. Para substituir:
+1. **Clone o repositório** (se aplicável)
 
-#### Hero Section (Imagem Principal)
-No arquivo `index.html`, linha ~30:
-```html
-<img src="https://images.unsplash.com/..." alt="Estrutura tensionada em evento" class="hero-img">
-```
-Substitua pela URL da sua imagem ou use um caminho local:
-```html
-<img src="assets/images/hero-image.jpg" alt="Estrutura tensionada em evento" class="hero-img">
-```
+2. **Configure o ambiente**
 
-#### Imagens dos Produtos
-No arquivo `index.html`, procure por:
-```html
-<img src="https://images.unsplash.com/..." alt="...">
-```
-Substitua pelas suas imagens. Recomendações:
-- **Tendas Tensionadas**: `assets/images/product-placeholders/tendas.jpg`
-- **Locação**: `assets/images/product-placeholders/locacao.jpg`
-- **Domos**: `assets/images/product-placeholders/domos.jpg`
-- **Decoração**: `assets/images/product-placeholders/decoracao.jpg`
-
-**Dimensões recomendadas**:
-- Hero: 1920x1080px (ou proporção 16:9)
-- Produtos: 800x600px (ou proporção 4:3)
-
-### 3. Personalizar Textos
-
-Todos os textos estão no arquivo `index.html`. Principais seções:
-
-- **Hero Section** (linhas ~25-35): Título e subtítulo principais
-- **Catálogo** (linhas ~40-120): Descrições dos produtos
-- **Engenharia** (linhas ~125-165): Textos sobre qualidade técnica
-- **Footer** (linhas ~170-185): Texto final e CTA
-
-### 4. Ajustar Cores (Opcional)
-
-As cores estão definidas no arquivo `styles/main.css` nas variáveis CSS (linhas ~5-30):
-
-```css
-:root {
-    --color-bg-primary: #0f0f0f;
-    --color-accent-primary: #00ff88;
-    /* ... outras cores ... */
-}
-```
-
-## 🌐 Hospedagem
-
-### Opção 1: GitHub Pages (Gratuito)
-
-1. Crie um repositório no GitHub
-2. Faça upload dos arquivos
-3. Vá em Settings > Pages
-4. Selecione a branch `main` e pasta `/root`
-5. Sua página estará disponível em `https://seu-usuario.github.io/psike`
-
-### Opção 2: Netlify (Gratuito)
-
-1. Acesse [netlify.com](https://netlify.com)
-2. Arraste a pasta do projeto para a área de deploy
-3. Pronto! Sua página estará no ar
-
-### Opção 3: Vercel (Gratuito)
-
-1. Instale o Vercel CLI: `npm i -g vercel`
-2. No diretório do projeto: `vercel`
-3. Siga as instruções
-
-### Opção 4: Servidor Próprio
-
-1. Faça upload dos arquivos via FTP
-2. Certifique-se de que o `index.html` está na raiz
-3. Acesse via navegador
-
-## 📱 Testar Localmente
-
-### Método 1: Abrir Direto
-Abra o arquivo `index.html` no navegador (funcionalidade limitada devido a CORS).
-
-### Método 2: Servidor Local (Recomendado)
-
-**Python 3:**
 ```bash
-python3 -m http.server 8000
-```
-Acesse: `http://localhost:8000`
+# Copiar arquivo de exemplo
+cp .env.example backend/.env
 
-**Node.js (com http-server):**
+# Editar variáveis de ambiente
+nano backend/.env
+```
+
+3. **Iniciar containers Docker**
+
 ```bash
-npx http-server -p 8000
-```
-Acesse: `http://localhost:8000`
+# Desenvolvimento
+docker-compose up -d
 
-**PHP:**
+# Produção
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+4. **Instalar dependências do backend**
+
 ```bash
-php -S localhost:8000
+docker-compose exec php composer install
+docker-compose exec php php artisan key:generate
 ```
-Acesse: `http://localhost:8000`
 
-## ✨ Funcionalidades Implementadas
+5. **Configurar banco de dados**
 
-- ✅ Scroll suave entre seções
-- ✅ Animações de entrada ao fazer scroll
-- ✅ Link do WhatsApp configurável
-- ✅ Design responsivo (mobile, tablet, desktop)
-- ✅ Efeito parallax sutil no hero
-- ✅ Hover effects nos cards
-- ✅ SEO básico (meta tags)
-- ✅ Acessibilidade (HTML semântico)
+```bash
+# Rodar migrations
+docker-compose exec php php artisan migrate
 
-## 🎯 Próximos Passos (Opcional)
+# Instalar Passport
+docker-compose exec php php artisan passport:install
 
-- Adicionar formulário de contato
-- Integrar Google Analytics
-- Adicionar mais seções (depoimentos, portfólio)
-- Implementar lazy loading de imagens
-- Adicionar modo claro/escuro toggle
-- Criar página de detalhes para cada produto
+# Popular banco com dados iniciais
+docker-compose exec php php artisan db:seed
+```
 
-## 📝 Notas
+6. **Instalar dependências do frontend**
 
-- As imagens do Unsplash são placeholders. Substitua pelas suas fotos reais.
-- O número do WhatsApp está como placeholder. **Não esqueça de alterar!**
-- O design foi pensado para conversão, com CTAs claros e visíveis.
-- Todas as cores seguem a identidade "Visionária Premium" (dark mode + verde neon).
+```bash
+# Frontend público
+cd frontend
+npm install
+npm run build
 
-## 🐛 Problemas Comuns
+# Admin
+cd ../admin
+npm install
+npm run build
+```
 
-**Imagens não aparecem:**
-- Verifique os caminhos das imagens
-- Certifique-se de que as imagens existem nos diretórios corretos
+## Desenvolvimento
 
-**WhatsApp não abre:**
-- Verifique o formato do número (apenas dígitos, com código do país)
-- Teste o link manualmente: `https://wa.me/5511999999999`
+### Frontend Público
 
-**Animações não funcionam:**
-- Verifique se o JavaScript está carregando (console do navegador)
-- Certifique-se de que está usando um servidor local (não apenas abrindo o HTML)
+```bash
+cd frontend
+npm run dev
+```
 
-## 📞 Suporte
+Acesse: http://localhost:5173
 
-Para dúvidas ou problemas, verifique:
-1. Console do navegador (F12) para erros
-2. Network tab para verificar se arquivos estão carregando
-3. Este README para instruções
+### Admin
 
----
+```bash
+cd admin
+npm run dev
+```
 
-**Desenvolvido para Psiké Deloun Arts**  
-*Arquitetura Efêmera e Cenografia de Alto Impacto*
-# psike
+Acesse: http://localhost:5174
+
+### Backend API
+
+A API estará disponível em: http://localhost/api
+
+## Estrutura de Dados
+
+### Categorias
+- QUADRADAS
+- RETANGULAR
+- MANDALA
+
+### Status de Pedidos
+- Novo (padrão)
+- Em Análise
+- Em Produção
+- Pronto
+- Enviado
+- Entregue
+- Cancelado
+
+### Permissões
+
+**Roles:**
+- `admin`: Acesso total
+- `manager`: Gerenciamento de pedidos e produtos
+- `seller`: Visualização e edição de pedidos
+- `viewer`: Apenas visualização
+
+## Endpoints da API
+
+### Públicos
+- `GET /api/products` - Listar produtos
+- `GET /api/products/{id}` - Detalhes do produto
+- `GET /api/categories` - Listar categorias
+- `GET /api/posts` - Listar posts do blog
+- `POST /api/orders` - Criar pedido
+
+### Protegidos (Admin)
+- Requer autenticação via Laravel Passport
+- Prefixo: `/api/admin/*`
+
+## Funcionalidades
+
+- ✅ Catálogo de produtos com imagens e variações
+- ✅ Sistema de carrinho de compras
+- ✅ Criação de pedidos com dados do cliente
+- ✅ Kanban de vendas com status editáveis
+- ✅ Geração de PDF de propostas
+- ✅ Blog (notícias e eventos)
+- ✅ Sistema de permissões
+- ✅ Área administrativa completa
+
+## Licença
+
+Proprietário - Psiké Deloun Arts

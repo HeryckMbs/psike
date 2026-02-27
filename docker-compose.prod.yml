@@ -1,0 +1,70 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: psike_nginx_prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/default.prod.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/ssl:/etc/nginx/ssl:ro
+      - ./backend/public:/var/www/html/public:ro
+      - ./frontend/dist:/var/www/html/frontend:ro
+      - ./admin/dist:/var/www/html/admin:ro
+    depends_on:
+      - php
+    networks:
+      - psike_network
+    restart: always
+
+  php:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: psike_php_prod
+    volumes:
+      - ./backend:/var/www/html
+      - ./docker/php/php.prod.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=${APP_URL}
+    depends_on:
+      - postgres
+    networks:
+      - psike_network
+    restart: always
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: psike_postgres_prod
+    environment:
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    networks:
+      - psike_network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data_prod:
+    driver: local
+
+networks:
+  psike_network:
+    driver: bridge

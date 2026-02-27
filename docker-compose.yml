@@ -1,0 +1,120 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: psike_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/ssl:/etc/nginx/ssl:ro
+      - ./backend/public:/var/www/html/public:ro
+      - ./backend/storage:/var/www/html/storage:ro
+      - ./frontend/dist:/var/www/html/frontend:ro
+      - ./frontend/public:/var/www/html/frontend/public:ro
+      - ./admin/dist:/var/www/html/admin:ro
+    depends_on:
+      - php
+      - frontend
+      - admin
+    networks:
+      - psike_network
+    restart: unless-stopped
+
+  php:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: psike_php
+    volumes:
+      - ./backend:/var/www/html
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+      - composer_cache:/var/www/.composer
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE:-psike_db}
+      - DB_USERNAME=${DB_USERNAME:-psike_user}
+      - DB_PASSWORD=${DB_PASSWORD:-psike_password}
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - psike_network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: psike_postgres
+    environment:
+      - POSTGRES_DB=${DB_DATABASE:-psike_db}
+      - POSTGRES_USER=${DB_USERNAME:-psike_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-psike_password}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - psike_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-psike_user} -d ${DB_DATABASE:-psike_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    container_name: psike_frontend
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost/api
+    networks:
+      - psike_network
+    restart: unless-stopped
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+  admin:
+    build:
+      context: ./admin
+      dockerfile: ../docker/admin/Dockerfile
+    container_name: psike_admin
+    volumes:
+      - ./admin:/app
+      - admin_node_modules:/app/node_modules
+    ports:
+      - "5174:5174"
+    environment:
+      - VITE_API_URL=http://localhost/api
+      - VITE_APP_NAME=Psiké Deloun Arts Admin
+    networks:
+      - psike_network
+    restart: unless-stopped
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+volumes:
+  postgres_data:
+    driver: local
+  frontend_node_modules:
+    driver: local
+  admin_node_modules:
+    driver: local
+  composer_cache:
+    driver: local
+
+networks:
+  psike_network:
+    driver: bridge
